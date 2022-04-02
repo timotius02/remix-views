@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Video {
+  id String @id
+  lastUpdated DateTime @updatedAt
+  title String
+  viewCount String // Viewcount is string bc Youtube API returns string and I don't want to deal with BIGINTs
+  thumbnail String
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  playlistId String
+
+  @@index([playlistId])
+}
+
+model Playlist {
+  id String @id   // UUID; we don't use Youtube's ID to allow User generated playlist (possibly?)
+  youtubeId String?
+  name String
+  createdAt DateTime
+  thumbnail String
+  type PLAYLIST_TYPE
+  videos Video[]
+}
+
+enum PLAYLIST_TYPE {
+  PLAYLIST
+  CHANNEL
+}
