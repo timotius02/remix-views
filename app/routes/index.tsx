@@ -26,7 +26,7 @@ export default function Index() {
       <h1>VIEWS Game</h1>
       <ul>
         {data.playlists.map((playlist) => (
-          <li>
+          <li key={playlist.id}>
             <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>
           </li>
         ))}
