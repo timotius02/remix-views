@@ -73,11 +73,11 @@ async function getChannel(name) {
 
 async function main() {
   const channels = [
-    "Disguised Toast",
-    "Ludwig",
-    "Mizkif",
-    "MrBeast",
-    "PewDiePie",
+    "LilyPichu",
+    "Michael Reeves",
+    "Linus Tech Tips",
+    "Valkyrae",
+    "OfflineTV",
   ];
   let channelPromises = [];
   for (let channel of channels) {

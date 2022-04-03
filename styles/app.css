@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.buttons-exit {
+  opacity: 1;
+}
+.buttons-exit-active {
+  opacity: 0;
+  transition: opacity 500ms;
+}
+.button-exit-done {
+  opacity: 0;
+}
+
+.views-counter-enter {
+  opacity: 0;
+}
+
+.views-counter-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+.views-counter-exit-done {
+  opacity: 0;
+}
+
+.views-counter-exit {
+  opacity: 0;
+}

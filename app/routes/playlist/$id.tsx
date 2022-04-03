@@ -1,9 +1,9 @@
 import { Video } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
-import { motion, useAnimation } from "framer-motion";
+import { useLoaderData } from "@remix-run/react";
+import { useAnimation } from "framer-motion";
 import { useState } from "react";
-import Card from "~/components/Card";
+import VideoSlide from "~/components/VideoSlide";
 import { db } from "~/utils/db.server";
 import getRandomInt from "~/utils/getRandomNumber";
 import useLocalStorage from "~/utils/useLocalStorage";
@@ -52,6 +52,7 @@ export default function Index() {
   const data = useLoaderData<PlaylistLoaderData>();
   const [score, setScore] = useState(0);
   const [highScore, setHighscore] = useLocalStorage(`highscore-${data.id}`, 0);
+  const [showButtons, setShowButtons] = useState(true);
   const [index, setIndex] = useState(data.index);
   const [index2, setIndex2] = useState(data.index2);
   const [index3, setIndex3] = useState(data.index3);
@@ -81,42 +82,46 @@ export default function Index() {
       }
     }
 
-    controls
-      .start(
-        windowSize.width >= 768
-          ? {
-              x: "-100%",
-              transition: { duration: 0.5 },
-              transitionEnd: {
-                x: "0%",
-              },
-            }
-          : {
-              y: "-100%",
-              transition: { duration: 0.5 },
-              transitionEnd: {
-                y: "0%",
-              },
-            }
-      )
-      .then(() => {
-        setIndex(index2);
-        setIndex2(index3);
-        setIndex3(getRandomInt(data.playlist.length, index));
-      });
+    setShowButtons(false);
+    setTimeout(() => {
+      controls
+        .start(
+          windowSize.width >= 768
+            ? {
+                x: "-100%",
+                transition: { duration: 0.5 },
+                transitionEnd: {
+                  x: "0%",
+                },
+              }
+            : {
+                y: "-100%",
+                transition: { duration: 0.5 },
+                transitionEnd: {
+                  y: "0%",
+                },
+              }
+        )
+        .then(() => {
+          setIndex(index2);
+          setIndex2(index3);
+          setIndex3(getRandomInt(data.playlist.length, index));
+          setShowButtons(true);
+        });
+    }, 2000);
   };
 
   return (
     <>
       <div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden relative text-white">
-        <Card video={video1} controls={controls} />
-        <Card
+        <VideoSlide video={video1} controls={controls} showButtons={false} />
+        <VideoSlide
           video={video2}
-          showButtons={true}
+          showButtons={showButtons}
           handleClick={handleClick}
           controls={controls}
         />
-        <Card
+        <VideoSlide
           video={video3}
           showButtons={true}
           handleClick={handleClick}
