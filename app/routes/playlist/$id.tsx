@@ -14,6 +14,7 @@ export const meta: MetaFunction = () => {
     title: `Guess view for your favorite creators | The VIEWS Game`,
     description:
       "Do you think you can guess the views of your favorite creators?",
+    themeColor: "#000",
   };
 };
 
