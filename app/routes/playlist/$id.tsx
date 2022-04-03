@@ -1,9 +1,12 @@
 import { Video } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { useAnimation } from "framer-motion";
 import { useState } from "react";
-import VideoSlide from "~/components/VideoSlide";
+import {
+  ChoiceSlide,
+  HiddenSlide,
+  StaticVideoSlide,
+} from "~/components/VideoSlides";
 import { db } from "~/utils/db.server";
 import getRandomInt from "~/utils/getRandomNumber";
 import useLocalStorage from "~/utils/useLocalStorage";
@@ -56,9 +59,8 @@ export default function Index() {
   const [index, setIndex] = useState(data.index);
   const [index2, setIndex2] = useState(data.index2);
   const [index3, setIndex3] = useState(data.index3);
-  const [windowSize, setWindowSize] = useWindowSize();
-
-  const controls = useAnimation();
+  const [sliding, setSliding] = useState(false);
+  const [animateButtons, setAnimateButtons] = useState(false);
 
   const video1 = data.playlist[index];
   const video2 = data.playlist[index2];
@@ -84,49 +86,28 @@ export default function Index() {
 
     setShowButtons(false);
     setTimeout(() => {
-      controls
-        .start(
-          windowSize.width >= 768
-            ? {
-                x: "-100%",
-                transition: { duration: 0.5 },
-                transitionEnd: {
-                  x: "0%",
-                },
-              }
-            : {
-                y: "-100%",
-                transition: { duration: 0.5 },
-                transitionEnd: {
-                  y: "0%",
-                },
-              }
-        )
-        .then(() => {
-          setIndex(index2);
-          setIndex2(index3);
-          setIndex3(getRandomInt(data.playlist.length, index));
-          setShowButtons(true);
-        });
-    }, 2000);
+      setSliding(true);
+    }, 750);
+  };
+
+  const onAnimationsComplete = () => {
+    setSliding(false);
+    setIndex(index2);
+    setIndex2(index3);
+    setIndex3(getRandomInt(data.playlist.length, index));
   };
 
   return (
     <>
       <div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden relative text-white">
-        <VideoSlide video={video1} controls={controls} showButtons={false} />
-        <VideoSlide
+        <StaticVideoSlide video={video1} sliding={sliding} />
+        <ChoiceSlide
           video={video2}
-          showButtons={showButtons}
-          handleClick={handleClick}
-          controls={controls}
+          onClick={(choice) => handleClick(choice)}
+          sliding={sliding}
+          onAnimationComplete={onAnimationsComplete}
         />
-        <VideoSlide
-          video={video3}
-          showButtons={true}
-          handleClick={handleClick}
-          controls={controls}
-        />
+        <HiddenSlide video={video3} sliding={sliding} />
 
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-4 md:p-6">
           <h1 className="font-bold text-2xl md:text-4xl text-black">VS</h1>
