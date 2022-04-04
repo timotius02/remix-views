@@ -2,6 +2,7 @@ import { Video } from "@prisma/client";
 import { useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import useWindowSize from "~/utils/useWindowSize";
+import CountUp from "./CountUp";
 
 type ChoiceSlideProps = {
   video: Video;
@@ -77,10 +78,8 @@ export const ChoiceSlide = ({
                 classNames={"views-counter"}
                 key={video.id + "views"}
               >
-                <div className={`absolute inset-0 `}>
-                  <h1 className="text-3xl md:text-6xl font-bold text-center">
-                    {parseInt(video.viewCount).toLocaleString()}
-                  </h1>
+                <div className={`flex flex-col items-center absolute inset-0 `}>
+                  <CountUp target={+video.viewCount} />
                   <h3 className="text-xl md:text-3xl font-medium text-center">
                     Views
                   </h3>
@@ -117,7 +116,7 @@ export const StaticVideoSlide = ({ video, sliding }: staticVideoSlideProps) => {
         </h3>
         has
         <div className="h-20 relative w-1/2">
-          <div className={`absolute inset-0 `}>
+          <div className={`flex flex-col items-center absolute inset-0 `}>
             <h1 className="text-3xl md:text-6xl font-bold text-center">
               {parseInt(video.viewCount).toLocaleString()}
             </h1>

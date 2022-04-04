@@ -87,7 +87,7 @@ export default function Index() {
     setShowButtons(false);
     setTimeout(() => {
       setSliding(true);
-    }, 750);
+    }, 1000);
   };
 
   const onAnimationsComplete = () => {
