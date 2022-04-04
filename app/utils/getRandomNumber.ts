@@ -1,10 +1,13 @@
-export default function getRandomNumber(max?: number, exception?: number) {
+export default function getRandomNumber(
+  max?: number,
+  exceptions: number[] = []
+) {
   if (max === undefined) return -1;
 
   let num = Math.floor(Math.random() * max);
 
-  if (exception !== undefined) {
-    while (num === exception) {
+  if (exceptions.length > 0) {
+    while (exceptions.includes(num)) {
       num = Math.floor(Math.random() * max);
     }
   }

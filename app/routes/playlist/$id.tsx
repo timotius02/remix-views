@@ -37,8 +37,8 @@ export const loader: LoaderFunction = async ({ params }) => {
   });
 
   const index = getRandomInt(playlist.length);
-  let index2 = getRandomInt(playlist.length, index);
-  let index3 = getRandomInt(playlist.length, index2);
+  let index2 = getRandomInt(playlist.length, [index]);
+  let index3 = getRandomInt(playlist.length, [index, index2]);
 
   const data: PlaylistLoaderData = {
     playlist,
@@ -53,14 +53,13 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function Index() {
   const data = useLoaderData<PlaylistLoaderData>();
-  const [score, setScore] = useState(0);
   const [highScore, setHighscore] = useLocalStorage(`highscore-${data.id}`, 0);
-  const [showButtons, setShowButtons] = useState(true);
+  const [score, setScore] = useState(0);
   const [index, setIndex] = useState(data.index);
   const [index2, setIndex2] = useState(data.index2);
   const [index3, setIndex3] = useState(data.index3);
+  const [prevIndices, setPrevIndices] = useState([index, index2, index3]);
   const [sliding, setSliding] = useState(false);
-  const [animateButtons, setAnimateButtons] = useState(false);
 
   const video1 = data.playlist[index];
   const video2 = data.playlist[index2];
@@ -84,7 +83,6 @@ export default function Index() {
       }
     }
 
-    setShowButtons(false);
     setTimeout(() => {
       setSliding(true);
     }, 1000);
@@ -94,7 +92,10 @@ export default function Index() {
     setSliding(false);
     setIndex(index2);
     setIndex2(index3);
-    setIndex3(getRandomInt(data.playlist.length, index));
+
+    const newIndex = getRandomInt(data.playlist.length, prevIndices);
+    setIndex3(newIndex);
+    setPrevIndices((prevIndices) => [...prevIndices, newIndex]);
   };
 
   return (
