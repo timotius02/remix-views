@@ -3,6 +3,7 @@ export default function getRandomNumber(
   exceptions: number[] = []
 ) {
   if (max === undefined) return -1;
+  if (max - 1 === exceptions.length) return -1;
 
   let num = Math.floor(Math.random() * max);
 

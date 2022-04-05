@@ -1,6 +1,7 @@
 import { Playlist } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import Footer from "~/components/Footer";
 import Navbar from "~/components/Navbar";
 import { db } from "~/utils/db.server";
 
@@ -16,14 +17,13 @@ type LoaderData = { playlists: Playlist[] };
 
 export const loader: LoaderFunction = async () => {
   const playlists = await db.playlist.findMany();
-
   return json({ playlists });
 };
 
 export default function Index() {
   const data = useLoaderData<LoaderData>();
   return (
-    <div className="bg-gray-100 w-full">
+    <div className="bg-gray-800 w-full">
       <Navbar />
       <div className="bg-gray-800">
         <div className="text-center w-full mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 z-20">
@@ -44,35 +44,30 @@ export default function Index() {
         </div>
       </div>
 
-      <section className="w-3/4 mx-auto">
-        <h1 className="font-light text-3xl my-8">Popular Creators</h1>
-        <ul className="flex gap-6 flex-wrap mx-auto justify-center">
-          {data.playlists.slice(0, 8).map((playlist) => (
-            <li key={playlist.id} className="w-1/5 shrink-0">
-              <Link to={`/playlist/${playlist.id}`}>
-                <div className="overflow-hidden shadow-lg rounded-lg ">
-                  <a href="#" className="w-full block h-full">
+      <section className="container mx-auto px-12">
+        <h1 className="font-light text-3xl my-8 text-white">
+          Popular Creators
+        </h1>
+        <ul className="grid grid-cols-5 gap-4">
+          {data.playlists
+            .slice(0, data.playlists.length > 10 ? 10 : data.playlists.length)
+            .map((playlist) => (
+              <li key={playlist.id}>
+                <Link to={`/playlist/${playlist.id}`} prefetch="intent">
+                  <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105">
                     <img
                       alt={`${playlist.name} Channel Image`}
                       src={playlist.thumbnail}
                       className="max-h-40 w-full object-cover"
                     />
-                    <div className="bg-white p-4">
-                      <p className="text-2xl font-bold mb-2 text-red-500">
-                        {playlist.name}
-                      </p>
-                      {/* <p className="text-gray-400 font-light text-md">
-                        The new supermac is here, 543 cv and 140 000$. This is
-                        best racing computer about 7 years on...
-                      </p> */}
-                    </div>
-                  </a>
-                </div>
-              </Link>
-            </li>
-          ))}
+                  </div>
+                </Link>
+              </li>
+            ))}
         </ul>
       </section>
+
+      <Footer />
     </div>
   );
 }

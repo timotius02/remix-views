@@ -32,7 +32,7 @@ async function getChannel(name) {
     .join(",");
 
   const videos = await service.videos.list({
-    part: ["snippet", "contentDetails", "statistics"],
+    part: ["snippet,contentDetails,statistics"],
     id: videoIds,
   });
 
@@ -47,28 +47,21 @@ async function getChannel(name) {
         ? playlistThumbnails.standard.url
         : playlistThumbnails.high.url,
       type: PLAYLIST_TYPE.CHANNEL,
+      videos: {
+        create: videos.data.items.map((video) => {
+          const thumbnails = video.snippet.thumbnails;
+          return {
+            id: video.id,
+            title: video.snippet.title,
+            viewCount: video.statistics.viewCount,
+            thumbnail: thumbnails.standard
+              ? thumbnails.standard.url
+              : thumbnails.high.url,
+          };
+        }),
+      },
     },
   });
-  const videosPromises = [];
-
-  for (let item of videos.data.items) {
-    const thumbnails = item.snippet.thumbnails;
-
-    videosPromises.push(
-      prisma.video.create({
-        data: {
-          id: item.id,
-          title: item.snippet.title,
-          viewCount: item.statistics.viewCount,
-          thumbnail: thumbnails.standard
-            ? thumbnails.standard.url
-            : thumbnails.high.url,
-          playlistId: playlist.id,
-        },
-      })
-    );
-  }
-  await Promise.all(videosPromises);
 }
 
 async function main() {
@@ -78,7 +71,22 @@ async function main() {
     "Linus Tech Tips",
     "Valkyrae",
     "OfflineTV",
+    "Mizkif",
+    "Disguised Toast",
+    "Pokimane",
+    "Ludwig",
+    "Mr. Beast",
+    "Dream",
+    "Jacksepticeye",
+    "Black Pink",
+    "Justin Bieber",
+    "Dude Perfect",
+    "Ed Sheeran",
+    "Ariana Grande",
+    "Taylor Swift",
+    "Smosh",
   ];
+
   let channelPromises = [];
   for (let channel of channels) {
     channelPromises.push(getChannel(channel));

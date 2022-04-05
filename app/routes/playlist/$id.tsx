@@ -8,9 +8,8 @@ import {
   StaticVideoSlide,
 } from "~/components/VideoSlides";
 import { db } from "~/utils/db.server";
-import getRandomInt from "~/utils/getRandomNumber";
+import getRandomNumber from "~/utils/getRandomNumber";
 import useLocalStorage from "~/utils/useLocalStorage";
-import useWindowSize from "~/utils/useWindowSize";
 
 export const meta: MetaFunction = () => {
   return {
@@ -36,9 +35,9 @@ export const loader: LoaderFunction = async ({ params }) => {
     },
   });
 
-  const index = getRandomInt(playlist.length);
-  let index2 = getRandomInt(playlist.length, [index]);
-  let index3 = getRandomInt(playlist.length, [index, index2]);
+  const index = getRandomNumber(playlist.length);
+  let index2 = getRandomNumber(playlist.length, [index]);
+  let index3 = getRandomNumber(playlist.length, [index, index2]);
 
   const data: PlaylistLoaderData = {
     playlist,
@@ -93,9 +92,17 @@ export default function Index() {
     setIndex(index2);
     setIndex2(index3);
 
-    const newIndex = getRandomInt(data.playlist.length, prevIndices);
-    setIndex3(newIndex);
-    setPrevIndices((prevIndices) => [...prevIndices, newIndex]);
+    let newIndex = getRandomNumber(data.playlist.length, prevIndices);
+    if (newIndex === -1) {
+      // SHould do something here if we run out of numbers
+
+      newIndex = getRandomNumber(data.playlist.length);
+      setIndex3(newIndex);
+      setPrevIndices((prevIndices) => [newIndex]);
+    } else {
+      setIndex3(newIndex);
+      setPrevIndices((prevIndices) => [...prevIndices, newIndex]);
+    }
   };
 
   return (

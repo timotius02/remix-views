@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { google } from "googleapis";
 
 let db: PrismaClient;
 
@@ -15,4 +16,11 @@ if (process.env.NODE_ENV === "production") {
   db = global.__db;
 }
 
-export { db };
+const service = google.youtube({
+  version: "v3",
+  auth: process.env.YOUTUBE_API_KEY,
+});
+
+import createPlaylist from "./createPlaylist.server";
+
+export { db, service, createPlaylist };
