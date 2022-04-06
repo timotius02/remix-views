@@ -4,6 +4,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 import Footer from "~/components/Footer";
 import Navbar from "~/components/Navbar";
 import { db } from "~/utils/db.server";
+import useWindowSize from "~/utils/useWindowSize";
 
 export const meta: MetaFunction = () => {
   return {
@@ -13,15 +14,26 @@ export const meta: MetaFunction = () => {
   };
 };
 
-type LoaderData = { playlists: Playlist[] };
+type LoaderData = { mostViewed: Playlist[] };
 
 export const loader: LoaderFunction = async () => {
-  const playlists = await db.playlist.findMany();
-  return json({ playlists });
+  const mostViewed = await db.playlist.findMany({
+    orderBy: [
+      {
+        plays: "desc",
+      },
+    ],
+    take: 10,
+  });
+  return json({ mostViewed });
 };
 
 export default function Index() {
   const data = useLoaderData<LoaderData>();
+  const [windowSize, setWindowSize] = useWindowSize();
+
+  const mostViewed =
+    windowSize.width > 768 ? data.mostViewed : data.mostViewed.slice(0, 6);
   return (
     <div className="bg-gray-800 w-full">
       <Navbar />
@@ -48,22 +60,20 @@ export default function Index() {
         <h1 className="font-light text-3xl my-8 text-white">
           Popular Creators
         </h1>
-        <ul className="grid grid-cols-5 gap-4">
-          {data.playlists
-            .slice(0, data.playlists.length > 10 ? 10 : data.playlists.length)
-            .map((playlist) => (
-              <li key={playlist.id}>
-                <Link to={`/playlist/${playlist.id}`} prefetch="intent">
-                  <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105">
-                    <img
-                      alt={`${playlist.name} Channel Image`}
-                      src={playlist.thumbnail}
-                      className="max-h-40 w-full object-cover"
-                    />
-                  </div>
-                </Link>
-              </li>
-            ))}
+        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          {mostViewed.map((playlist) => (
+            <li key={playlist.id}>
+              <Link to={`/playlist/${playlist.id}`} prefetch="intent">
+                <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105">
+                  <img
+                    alt={`${playlist.name} Channel Image`}
+                    src={playlist.thumbnail}
+                    className="max-h-40 w-full object-cover"
+                  />
+                </div>
+              </Link>
+            </li>
+          ))}
         </ul>
       </section>
 

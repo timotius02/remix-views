@@ -15,10 +15,12 @@ async function getChannel(name) {
     part: ["snippet"],
     q: name,
     maxResults: 1,
+    type: "channel",
   });
 
   const channelId = searchResult.data.items[0].snippet.channelId;
   const channelTitle = searchResult.data.items[0].snippet.channelTitle;
+  const channelThumbnail = searchResult.data.items[0].snippet.thumbnails;
   const playlistId = `UU${channelId.substring(2)}`;
 
   const videosResults = await service.playlistItems.list({
@@ -78,7 +80,7 @@ async function main() {
     "Mr. Beast",
     "Dream",
     "Jacksepticeye",
-    "Black Pink",
+    "Blackpink",
     "Justin Bieber",
     "Dude Perfect",
     "Ed Sheeran",

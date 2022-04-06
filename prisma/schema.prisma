@@ -31,6 +31,7 @@ model Playlist {
   thumbnail String
   type PLAYLIST_TYPE
   videos Video[]
+  plays Int @default(0) // Number of times this playlist has been played
 }
 
 enum PLAYLIST_TYPE {
