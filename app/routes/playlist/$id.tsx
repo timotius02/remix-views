@@ -1,6 +1,6 @@
 import { Video } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import {
   ChoiceSlide,
@@ -71,6 +71,7 @@ export default function Index() {
   const [index3, setIndex3] = useState(data.index3);
   const [prevIndices, setPrevIndices] = useState([index, index2, index3]);
   const [sliding, setSliding] = useState(false);
+  const [hasEnded, setHasEnded] = useState(false);
 
   const video1 = data.playlist[index];
   const video2 = data.playlist[index2];
@@ -84,19 +85,25 @@ export default function Index() {
   };
 
   const handleClick = (choice: string) => {
-    if (choice === "more") {
-      if (parseInt(video1.viewCount) <= parseInt(video2.viewCount)) {
-        addScore();
-      }
+    if (
+      choice === "more" &&
+      parseInt(video1.viewCount) <= parseInt(video2.viewCount)
+    ) {
+      addScore();
+      setTimeout(() => {
+        setSliding(true);
+      }, 1000);
+    } else if (
+      choice === "less" &&
+      parseInt(video1.viewCount) >= parseInt(video2.viewCount)
+    ) {
+      addScore();
+      setTimeout(() => {
+        setSliding(true);
+      }, 1000);
     } else {
-      if (parseInt(video1.viewCount) >= parseInt(video2.viewCount)) {
-        addScore();
-      }
+      setHasEnded(true);
     }
-
-    setTimeout(() => {
-      setSliding(true);
-    }, 1000);
   };
 
   const onAnimationsComplete = () => {
@@ -106,41 +113,79 @@ export default function Index() {
 
     let newIndex = getRandomNumber(data.playlist.length, prevIndices);
     if (newIndex === -1) {
-      // SHould do something here if we run out of numbers
+      // TODO: SHould do something here if we run out of numbers
 
       newIndex = getRandomNumber(data.playlist.length);
       setIndex3(newIndex);
-      setPrevIndices((prevIndices) => [newIndex]);
+      setPrevIndices([newIndex]);
     } else {
       setIndex3(newIndex);
       setPrevIndices((prevIndices) => [...prevIndices, newIndex]);
     }
   };
+  const reset = () => {
+    setScore(0);
+    setHasEnded(false);
+    const index = getRandomNumber(data.playlist.length);
+    const index2 = getRandomNumber(data.playlist.length, [index]);
+    const index3 = getRandomNumber(data.playlist.length, [index, index2]);
 
-  return (
-    <>
-      <div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden relative text-white">
-        <StaticVideoSlide video={video1} sliding={sliding} />
-        <ChoiceSlide
-          video={video2}
-          onClick={(choice) => handleClick(choice)}
-          sliding={sliding}
-          onAnimationComplete={onAnimationsComplete}
-        />
-        <HiddenSlide video={video3} sliding={sliding} />
+    setIndex(index);
+    setIndex2(index2);
+    setIndex3(index3);
+    setPrevIndices([index, index2, index3]);
+  };
+  return hasEnded ? (
+    <div className="bg-gray-800 w-screen h-screen flex flex-col justify-center items-center">
+      <h1 className="text-3xl font-extrabold text-white sm:text-4xl mb-6">
+        You finished the game!
+      </h1>
+      <h2 className="text-4xl font-extrabold text-white sm:text-6xl mt-6 mb-2">
+        Your score: <span className="text-red-500">{score}</span>
+      </h2>
+      <h2 className="text-3xl font-extrabold text-white sm:text-4xl mb-6">
+        High Score: {highScore}
+      </h2>
+      <div className="flex mt-6 gap-2 flex-col md:flex-row md:gap-6">
+        <Link
+          to="/"
+          className="flex-1 bg-transparent rounded-full border-2 border-white px-12 py-6 text-white hover:bg-white hover:text-black text-base font-bold text-center whitespace-nowrap"
+        >
+          Back to Menu
+        </Link>
 
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-4 md:p-6">
-          <h1 className="font-bold text-2xl md:text-4xl text-black">VS</h1>
-        </div>
-
-        <div className="absolute bottom-0 left-0 p-6">
-          <h5 className="text-2xl font-bold">Score: {score}</h5>
-        </div>
-
-        <div className="absolute bottom-0 right-0 p-6">
-          <h5 className="text-2xl font-bold">High Score: {highScore}</h5>
-        </div>
+        <button
+          className="flex-1 bg-transparent rounded-full border-2 border-white px-12 py-6 text-white hover:bg-white hover:text-black text-base font-bold"
+          onClick={reset}
+        >
+          Play again
+        </button>
       </div>
-    </>
+    </div>
+  ) : (
+    <div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden relative text-white">
+      <StaticVideoSlide video={video1} sliding={sliding} />
+      <ChoiceSlide
+        video={video2}
+        onClick={(choice) => handleClick(choice)}
+        sliding={sliding}
+        onAnimationComplete={onAnimationsComplete}
+      />
+      <HiddenSlide video={video3} sliding={sliding} />
+
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-4 md:p-6">
+        <h1 className="font-bold text-2xl md:text-4xl text-black">VS</h1>
+      </div>
+
+      <div className="absolute bottom-0 left-0 p-6">
+        <h5 className="text-2xl md:text-4xl font-extrabold">Score: {score}</h5>
+      </div>
+
+      <div className="absolute bottom-0 right-0 p-6">
+        <h5 className="text-2xl md:text-4xl font-extrabold">
+          High Score: {highScore}
+        </h5>
+      </div>
+    </div>
   );
 }

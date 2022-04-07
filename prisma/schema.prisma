@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  previewFeatures = ["referentialIntegrity", "fullTextSearch", "fullTextIndex"]
 }
 datasource db {
   provider = "mysql"
@@ -32,6 +32,8 @@ model Playlist {
   type PLAYLIST_TYPE
   videos Video[]
   plays Int @default(0) // Number of times this playlist has been played
+
+  @@fulltext([name])
 }
 
 enum PLAYLIST_TYPE {

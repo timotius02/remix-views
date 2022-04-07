@@ -70,6 +70,7 @@ export const ChoiceSlide = ({
                       Less
                     </button>
                   </div>
+                  <span>Views</span>
                 </div>
               </CSSTransition>
             ) : (

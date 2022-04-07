@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async () => {
         plays: "desc",
       },
     ],
-    take: 10,
+    take: 12,
   });
   return json({ mostViewed });
 };
@@ -60,16 +60,19 @@ export default function Index() {
         <h1 className="font-light text-3xl my-8 text-white">
           Popular Creators
         </h1>
-        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {mostViewed.map((playlist) => (
             <li key={playlist.id}>
               <Link to={`/playlist/${playlist.id}`} prefetch="intent">
-                <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105">
+                <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105 relative group">
                   <img
                     alt={`${playlist.name} Channel Image`}
                     src={playlist.thumbnail}
-                    className="max-h-40 w-full object-cover"
+                    className="max-h-40 w-full object-cover group-hover:brightness-50"
                   />
+                  <div className="opacity-0 hover:opacity-100 absolute inset-0 z-10 text-white font-extrabold flex justify-center items-center">
+                    <div className="font-bold text-xl">{playlist.name}</div>
+                  </div>
                 </div>
               </Link>
             </li>
