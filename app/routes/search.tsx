@@ -1,13 +1,8 @@
 import { Playlist } from "@prisma/client";
 import img from "../../public/search.png";
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-} from "@remix-run/node";
+import { json, LoaderFunction } from "@remix-run/node";
 import { Form, Link, useLoaderData, useSearchParams } from "@remix-run/react";
-import { service, createPlaylist, db } from "~/utils/db.server";
+import { db } from "~/utils/db.server";
 import { useState } from "react";
 import Navbar from "~/components/Navbar";
 
@@ -39,24 +34,22 @@ export default function NewPlaylist() {
   return (
     <div className="bg-gray-800 w-full h-screen">
       <Navbar />
-      <div className="bg-white p-6 rounded max-w-3xl mx-auto w-3/4 my-8">
-        <Form method="get">
-          <div className="flex gap-4">
-            <input
-              className="flex-1 outline-0"
-              type="text"
-              placeholder="What are you looking for?"
-              value={value}
-              name="term"
-              onInput={(e) => setValue((e.target as HTMLInputElement).value)}
-            />
+      <Form method="get">
+        <div className="bg-white p-6 rounded max-w-3xl mx-auto w-3/4 my-8 flex gap-4">
+          <input
+            className="flex-1 outline-0"
+            type="text"
+            placeholder="What are you looking for?"
+            value={value}
+            name="term"
+            onInput={(e) => setValue((e.target as HTMLInputElement).value)}
+          />
 
-            <button>
-              <img className="inline" src={img} alt="search icon" />
-            </button>
-          </div>
-        </Form>
-      </div>
+          <button className="w-6 h-6">
+            <img src={img} alt="search icon" />
+          </button>
+        </div>
+      </Form>
 
       <section className="container mx-auto px-12 flex flex-col gap-4">
         <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">

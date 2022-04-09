@@ -3,12 +3,14 @@ import { useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import useWindowSize from "~/utils/useWindowSize";
 import CountUp from "./CountUp";
+import youtubeIcon from "../../public/youtube.png";
 
 type ChoiceSlideProps = {
   video: Video;
   sliding?: boolean;
   onClick?: (choice: string) => void;
   onAnimationComplete?: () => void;
+  openModal: () => void;
 };
 
 export const ChoiceSlide = ({
@@ -16,6 +18,7 @@ export const ChoiceSlide = ({
   sliding,
   onClick = (s: string) => {},
   onAnimationComplete = () => {},
+  openModal,
 }: ChoiceSlideProps) => {
   const [windowSize, setWindowSize] = useWindowSize();
   const [showButtons, setShowButtons] = useState(true);
@@ -46,7 +49,7 @@ export const ChoiceSlide = ({
           “{video.title}”
         </h3>
         has
-        <div className="h-20 relative w-1/2">
+        <div className="h-24 md:h-44 relative">
           <TransitionGroup component={null}>
             {showButtons ? (
               <CSSTransition
@@ -55,7 +58,7 @@ export const ChoiceSlide = ({
                 key={video.id + "buttons"}
                 unmountOnExit
               >
-                <div className={`flex flex-col items-center absolute inset-0`}>
+                <div className="flex flex-col items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <div className="flex md:flex-col gap-3 my-3 z-10">
                     <button
                       className="border-2 border-white px-10 py-2 font-bold text-yellow-400 text-lg rounded-full hover:bg-white hover:text-black"
@@ -76,10 +79,10 @@ export const ChoiceSlide = ({
             ) : (
               <CSSTransition
                 timeout={500}
-                classNames={"views-counter"}
+                classNames="views-counter"
                 key={video.id + "views"}
               >
-                <div className={`flex flex-col items-center absolute inset-0 `}>
+                <div className="flex flex-col items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <CountUp target={+video.viewCount} />
                   <h3 className="text-xl md:text-3xl font-medium text-center">
                     Views
@@ -89,6 +92,13 @@ export const ChoiceSlide = ({
             )}
           </TransitionGroup>
         </div>
+        <button onClick={openModal}>
+          <img
+            className="hover:brightness-75"
+            src={youtubeIcon}
+            alt="youtube icon"
+          />
+        </button>
       </div>
     </CSSTransition>
   );
@@ -97,8 +107,13 @@ export const ChoiceSlide = ({
 type staticVideoSlideProps = {
   video: Video;
   sliding: boolean;
+  openModal: () => void;
 };
-export const StaticVideoSlide = ({ video, sliding }: staticVideoSlideProps) => {
+export const StaticVideoSlide = ({
+  video,
+  sliding,
+  openModal,
+}: staticVideoSlideProps) => {
   const [windowSize, setWindowSize] = useWindowSize();
   return (
     <CSSTransition
@@ -116,8 +131,8 @@ export const StaticVideoSlide = ({ video, sliding }: staticVideoSlideProps) => {
           “{video.title}”
         </h3>
         has
-        <div className="h-20 relative w-1/2">
-          <div className={`flex flex-col items-center absolute inset-0 `}>
+        <div className="h-24 md:h-44 relative">
+          <div className="flex flex-col items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <h1 className="text-3xl md:text-6xl font-bold text-center">
               {parseInt(video.viewCount).toLocaleString()}
             </h1>
@@ -126,6 +141,13 @@ export const StaticVideoSlide = ({ video, sliding }: staticVideoSlideProps) => {
             </h3>
           </div>
         </div>
+        <button onClick={openModal}>
+          <img
+            className="hover:brightness-75"
+            src={youtubeIcon}
+            alt="youtube icon"
+          />
+        </button>
       </div>
     </CSSTransition>
   );
@@ -153,8 +175,8 @@ export const HiddenSlide = ({ video, sliding }: HiddenSlide) => {
           “{video.title}”
         </h3>
         has
-        <div className="h-20 relative w-1/2">
-          <div className={`flex flex-col items-center absolute inset-0`}>
+        <div className="h-24 md:h-44 relative">
+          <div className="flex flex-col items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <div className="flex md:flex-col gap-3 my-3 z-10">
               <button className="border-2 border-white px-10 py-2 font-bold text-yellow-400 text-lg rounded-full hover:bg-white hover:text-black">
                 More
@@ -163,8 +185,10 @@ export const HiddenSlide = ({ video, sliding }: HiddenSlide) => {
                 Less
               </button>
             </div>
+            <span>Views</span>
           </div>
         </div>
+        <img src={youtubeIcon} alt="youtube icon" />
       </div>
     </CSSTransition>
   );

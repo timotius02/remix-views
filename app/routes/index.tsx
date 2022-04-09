@@ -1,10 +1,11 @@
 import { Playlist, PLAYLIST_TYPE } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import Footer from "~/components/Footer";
 import Navbar from "~/components/Navbar";
 import { db } from "~/utils/db.server";
 import useWindowSize from "~/utils/useWindowSize";
+import img from "../../public/search.png";
 
 export const meta: MetaFunction = () => {
   return {
@@ -64,18 +65,27 @@ export default function Index() {
             <span className="block">Do you know your youtubers?</span>
             <span className="block text-red-500">Let&#x27;s find out.</span>
           </h2>
-          <div className="lg:mt-0 lg:flex-shrink-0">
-            <div className="mt-12 inline-flex rounded-md shadow">
-              <a
-                href="/playlist/new"
-                className="py-4 px-6 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-              >
-                Create Custom Playlist{" "}
-                <span className="bg-red-300 rounded px-2 py-1 text-sm">
-                  BETA
-                </span>
-              </a>
-            </div>
+          <div className="mt-12 inline-flex flex-col md:flex-row rounded-md shadow gap-2 md:gap-6">
+            <Form method="get" action="/search">
+              <div className="flex gap-4 py-3 px-6 bg-white rounded-lg">
+                <input
+                  className="flex-1 outline-0"
+                  type="text"
+                  placeholder="Search"
+                  name="term"
+                />
+                <button type="submit" className="w-6 h-6">
+                  <img src={img} alt="search icon" />
+                </button>
+              </div>
+            </Form>
+            <a
+              href="/playlist/new"
+              className="py-1.5 px-6 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg leading-9"
+            >
+              Create Custom Playlist{" "}
+              <span className="bg-red-300 rounded px-2 py-1 text-sm">BETA</span>
+            </a>
           </div>
         </div>
       </div>
@@ -130,7 +140,6 @@ export default function Index() {
           ))}
         </ul>
       </section>
-
       <Footer />
     </div>
   );

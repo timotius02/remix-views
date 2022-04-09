@@ -2,6 +2,7 @@ import { Video } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
+import Modal from "react-modal";
 import {
   ChoiceSlide,
   HiddenSlide,
@@ -72,10 +73,14 @@ export default function Index() {
   const [prevIndices, setPrevIndices] = useState([index, index2, index3]);
   const [sliding, setSliding] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalVideo, setModalVideo] = useState("");
 
   const video1 = data.playlist[index];
   const video2 = data.playlist[index2];
   const video3 = data.playlist[index3];
+
+  Modal.setAppElement("body");
 
   const addScore = () => {
     setScore(score + 1);
@@ -135,6 +140,11 @@ export default function Index() {
     setIndex3(index3);
     setPrevIndices([index, index2, index3]);
   };
+
+  const openModal = (id: string) => {
+    setIsModalOpen(true);
+    setModalVideo(id);
+  };
   return hasEnded ? (
     <div className="bg-gray-800 w-screen h-screen flex flex-col justify-center items-center">
       <h1 className="text-3xl font-extrabold text-white sm:text-4xl mb-6">
@@ -164,12 +174,17 @@ export default function Index() {
     </div>
   ) : (
     <div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden relative text-white">
-      <StaticVideoSlide video={video1} sliding={sliding} />
+      <StaticVideoSlide
+        video={video1}
+        sliding={sliding}
+        openModal={() => openModal(video1.id)}
+      />
       <ChoiceSlide
         video={video2}
         onClick={(choice) => handleClick(choice)}
         sliding={sliding}
         onAnimationComplete={onAnimationsComplete}
+        openModal={() => openModal(video2.id)}
       />
       <HiddenSlide video={video3} sliding={sliding} />
 
@@ -177,15 +192,33 @@ export default function Index() {
         <h1 className="font-bold text-2xl md:text-4xl text-black">VS</h1>
       </div>
 
-      <div className="absolute bottom-0 left-0 p-6">
-        <h5 className="text-2xl md:text-4xl font-extrabold">Score: {score}</h5>
+      <div className="absolute bottom-0 left-0 p-2 md:p-6">
+        <h5 className="text-xl md:text-4xl font-extrabold">Score: {score}</h5>
       </div>
 
-      <div className="absolute bottom-0 right-0 p-6">
-        <h5 className="text-2xl md:text-4xl font-extrabold">
+      <div className="absolute bottom-0 right-0 p-2 md:p-6">
+        <h5 className="text-xl md:text-4xl font-extrabold">
           High Score: {highScore}
         </h5>
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Example Modal"
+        overlayClassName="bg-black/75 fixed w-full h-full top-0 left-0 flex items-center justify-center z-20 overflow-auto"
+        className="bg-white max-w-4xl w-3/4 mx-auto"
+      >
+        <div className="relative pb-[56.25%] pt-6 h-0">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${modalVideo}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </Modal>
     </div>
   );
 }
