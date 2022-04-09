@@ -1,4 +1,4 @@
-import { Playlist } from "@prisma/client";
+import { Playlist, PLAYLIST_TYPE } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import Footer from "~/components/Footer";
@@ -14,26 +14,47 @@ export const meta: MetaFunction = () => {
   };
 };
 
-type LoaderData = { mostViewed: Playlist[] };
+type LoaderData = {
+  channels: Playlist[];
+  playlists: Playlist[];
+};
 
 export const loader: LoaderFunction = async () => {
-  const mostViewed = await db.playlist.findMany({
+  const channels = await db.playlist.findMany({
     orderBy: [
       {
         plays: "desc",
       },
     ],
+    where: {
+      type: PLAYLIST_TYPE.CHANNEL,
+    },
     take: 12,
   });
-  return json({ mostViewed });
+  const playlists = await db.playlist.findMany({
+    orderBy: [
+      {
+        plays: "desc",
+      },
+    ],
+    where: {
+      type: PLAYLIST_TYPE.PLAYLIST,
+    },
+    take: 12,
+  });
+
+  return json({ channels, playlists });
 };
 
 export default function Index() {
   const data = useLoaderData<LoaderData>();
   const [windowSize, setWindowSize] = useWindowSize();
 
-  const mostViewed =
-    windowSize.width > 768 ? data.mostViewed : data.mostViewed.slice(0, 6);
+  const channels =
+    windowSize.width > 768 ? data.channels : data.channels.slice(0, 6);
+
+  const playlists =
+    windowSize.width > 768 ? data.playlists : data.playlists.slice(0, 6);
   return (
     <div className="bg-gray-800 w-full">
       <Navbar />
@@ -45,12 +66,15 @@ export default function Index() {
           </h2>
           <div className="lg:mt-0 lg:flex-shrink-0">
             <div className="mt-12 inline-flex rounded-md shadow">
-              <button
-                type="button"
+              <a
+                href="/playlist/new"
                 className="py-4 px-6 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
               >
-                Get started
-              </button>
+                Create Custom Playlist{" "}
+                <span className="bg-red-300 rounded px-2 py-1 text-sm">
+                  BETA
+                </span>
+              </a>
             </div>
           </div>
         </div>
@@ -61,7 +85,7 @@ export default function Index() {
           Popular Creators
         </h1>
         <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          {mostViewed.map((playlist) => (
+          {channels.map((playlist) => (
             <li key={playlist.id}>
               <Link to={`/playlist/${playlist.id}`} prefetch="intent">
                 <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105 relative group">
@@ -70,8 +94,35 @@ export default function Index() {
                     src={playlist.thumbnail}
                     className="max-h-40 w-full object-cover group-hover:brightness-50"
                   />
-                  <div className="opacity-0 hover:opacity-100 absolute inset-0 z-10 text-white font-extrabold flex justify-center items-center">
-                    <div className="font-bold text-xl">{playlist.name}</div>
+                  <div className="opacity-0 hover:opacity-100 absolute inset-0 z-10 text-white font-extrabold flex justify-center items-center p-4">
+                    <div className="font-bold text-xl text-center">
+                      {playlist.name}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section className="container mx-auto px-12">
+        <h1 className="font-light text-3xl my-8 text-white">
+          Popular Playlists
+        </h1>
+        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          {playlists.map((playlist) => (
+            <li key={playlist.id}>
+              <Link to={`/playlist/${playlist.id}`} prefetch="intent">
+                <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105 relative group">
+                  <img
+                    alt={`${playlist.name} Channel Image`}
+                    src={playlist.thumbnail}
+                    className="max-h-40 w-full object-cover group-hover:brightness-50"
+                  />
+                  <div className="opacity-0 hover:opacity-100 absolute inset-0 z-10 text-white font-extrabold flex justify-center items-center p-4">
+                    <div className="font-bold text-xl text-center">
+                      {playlist.name}
+                    </div>
                   </div>
                 </div>
               </Link>
