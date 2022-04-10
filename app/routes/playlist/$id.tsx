@@ -7,7 +7,7 @@ import Versus, { VERSUS_TYPES } from "~/components/Versus";
 import {
   ChoiceSlide,
   HiddenSlide,
-  StaticVideoSlide,
+  StaticSlide,
 } from "~/components/VideoSlides";
 import { db } from "~/utils/db.server";
 import getRandomNumber from "~/utils/getRandomNumber";
@@ -183,7 +183,7 @@ export default function Index() {
     </div>
   ) : (
     <div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden relative text-white">
-      <StaticVideoSlide
+      <StaticSlide
         video={video1}
         sliding={sliding}
         openModal={() => openModal(video1.id)}

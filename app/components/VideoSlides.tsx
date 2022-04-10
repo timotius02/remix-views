@@ -104,16 +104,16 @@ export const ChoiceSlide = ({
   );
 };
 
-type staticVideoSlideProps = {
+type staticSlideProps = {
   video: Video;
   sliding: boolean;
   openModal: () => void;
 };
-export const StaticVideoSlide = ({
+export const StaticSlide = ({
   video,
   sliding,
   openModal,
-}: staticVideoSlideProps) => {
+}: staticSlideProps) => {
   const windowSize = useWindowSize();
   return (
     <CSSTransition
