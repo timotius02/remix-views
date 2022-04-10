@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import { json, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 
 import styles from "./styles/app.css";
@@ -20,7 +21,16 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
+export async function loader() {
+  return json({
+    ENV: {
+      RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+    },
+  });
+}
+
 export default function App() {
+  const data = useLoaderData();
   return (
     <html lang="en">
       <head>
@@ -29,6 +39,11 @@ export default function App() {
       </head>
       <body className="bg-gray-800">
         <Outlet />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+          }}
+        />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

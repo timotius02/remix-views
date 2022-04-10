@@ -1,20 +1,47 @@
-import { ActionFunction, redirect } from "@remix-run/node";
-import { Form, useCatch } from "@remix-run/react";
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from "@remix-run/node";
+import {
+  Form,
+  useActionData,
+  useLoaderData,
+  useTransition,
+} from "@remix-run/react";
 import { useState } from "react";
 import Navbar from "~/components/Navbar";
 import { service, createPlaylist } from "~/utils/db.server";
+import ReCAPTCHA from "react-google-recaptcha";
+
+async function validateHuman(token: string): Promise<boolean> {
+  const secret = process.env.RECAPTCHA_SECRET;
+  const response = await fetch(
+    `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`,
+    {
+      method: "POST",
+    }
+  );
+  const data = await response.json();
+  return data.success;
+}
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
+
+  const token = formData.get("token") as string;
+  const human = await validateHuman(token);
+  if (!human) {
+    return json({ message: "Bot detected. Unauthorized" }, { status: 401 });
+  }
+
   const playlistUrl = formData.get("playlistUrl") as string;
-  if (!playlistUrl) {
-    throw new Response("Please Provide a Playlist URL", {
-      status: 400,
-    });
-  } else if (
-    !playlistUrl.startsWith("https://www.youtube.com/playlist?list=")
-  ) {
-    throw new Response("Invalid Playlist URL", { status: 400 });
+  if (!playlistUrl || !playlistUrl.includes("youtube.com/playlist?list=")) {
+    return json(
+      { message: "Please Provide a valid Playlist URL" },
+      { status: 400 }
+    );
   }
 
   const urlParams = new URLSearchParams(playlistUrl.split("?").pop());
@@ -38,21 +65,25 @@ export const action: ActionFunction = async ({ request }) => {
 
     return redirect(`/playlist/${gamePlaylist.id}`);
   }
-
-  throw new Response("Invalid Playlist URL", { status: 400 });
+  return json(
+    { message: "Invalid Playlist URL. Remember Playlist URL must be Public." },
+    { status: 400 }
+  );
 };
 
-type NewPlaylistProps = {
-  error?: string;
-};
-export default function NewPlaylist({ error }: NewPlaylistProps) {
-  const [input, setInput] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(error);
-
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-    setErrorMessage(undefined);
+export const loader: LoaderFunction = async () => {
+  return {
+    RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
   };
+};
+
+export default function NewPlaylist() {
+  const data = useLoaderData();
+  const [input, setInput] = useState("");
+  const error = useActionData();
+  const [token, setToken] = useState("");
+  const transition = useTransition();
+
   return (
     <>
       <Navbar />
@@ -72,23 +103,25 @@ export default function NewPlaylist({ error }: NewPlaylistProps) {
             name="playlistUrl"
             placeholder="https://www.youtube.com/playlist?list=..."
             value={input}
-            onChange={handleInput}
+            onChange={(e) => setInput(e.target.value)}
             required
           />
-          {errorMessage && <span className="text-red-500">{errorMessage}</span>}
+          {error && <span className="text-red-500">{error.message}</span>}
+          <ReCAPTCHA
+            style={{ display: "inline-block", width: 304 }}
+            className="self-center"
+            sitekey={data.RECAPTCHA_SITE_KEY}
+            onChange={(val) => setToken(val as string)}
+          />
+          <input type="hidden" name="token" value={token} />
           <button
             className="px-4 py-2 rounded-lg bg-red-500 text-white disabled:opacity-50"
-            disabled={input === ""}
+            disabled={input === "" || transition.state !== "idle"}
           >
-            Submit
+            {transition.state === "idle" ? "Submit" : transition.state}
           </button>
         </Form>
       </div>
     </>
   );
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-  return <NewPlaylist error={caught.data} />;
 }
