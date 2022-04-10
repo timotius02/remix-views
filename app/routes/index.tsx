@@ -57,9 +57,9 @@ export default function Index() {
   const playlists =
     windowSize.width > 768 ? data.playlists : data.playlists.slice(0, 6);
   return (
-    <div className="bg-gray-800 w-full">
+    <>
       <Navbar />
-      <div className="bg-gray-800">
+      <header>
         <div className="text-center w-full mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 z-20">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
             <span className="block">Do you know your youtubers?</span>
@@ -90,7 +90,7 @@ export default function Index() {
             </a> */}
           </div>
         </div>
-      </div>
+      </header>
 
       <section className="container mx-auto px-12">
         <h1 className="font-light text-3xl my-8 text-white">
@@ -143,6 +143,6 @@ export default function Index() {
         </ul>
       </section>
       <Footer />
-    </div>
+    </>
   );
 }

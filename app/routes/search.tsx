@@ -32,14 +32,14 @@ export default function NewPlaylist() {
   const [value, setValue] = useState(term[0] ?? "");
 
   return (
-    <div className="bg-gray-800 w-full h-screen">
+    <>
       <Navbar />
       <Form method="get">
         <div className="bg-white p-6 rounded max-w-3xl mx-auto w-3/4 my-8 flex gap-4">
           <input
             className="flex-1 outline-0"
             type="text"
-            placeholder="What are you looking for?"
+            placeholder="Search"
             value={value}
             name="term"
             onInput={(e) => setValue((e.target as HTMLInputElement).value)}
@@ -82,6 +82,6 @@ export default function NewPlaylist() {
           Search icons created by Catalin Fertu - Flaticon
         </a>
       </div> */}
-    </div>
+    </>
   );
 }

@@ -155,7 +155,7 @@ export default function Index() {
     setModalVideo(id);
   };
   return hasEnded ? (
-    <div className="bg-gray-800 w-screen h-screen flex flex-col justify-center items-center">
+    <div className="w-screen h-screen flex flex-col justify-center items-center">
       <h1 className="text-3xl font-extrabold text-white sm:text-4xl mb-6">
         You finished the game!
       </h1>
