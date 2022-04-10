@@ -65,7 +65,7 @@ export default function Index() {
             <span className="block">Do you know your youtubers?</span>
             <span className="block text-red-500">Let&#x27;s find out.</span>
           </h2>
-          <div className="mt-12 inline-flex flex-col md:flex-row rounded-md shadow gap-2 md:gap-6 w-3/4 max-w-xl">
+          <div className="mt-12 inline-flex flex-col md:flex-row rounded-md shadow gap-4 md:gap-6 w-3/4 max-w-xl">
             <Form
               method="get"
               action="/search"
@@ -81,13 +81,6 @@ export default function Index() {
                 <img src={img} alt="search icon" />
               </button>
             </Form>
-            {/* <a
-              href="/playlist/new"
-              className="py-1.5 px-6 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg leading-9"
-            >
-              Custom Playlist{" "}
-              <span className="bg-red-300 rounded px-2 py-1 text-sm">BETA</span>
-            </a> */}
           </div>
         </div>
       </header>

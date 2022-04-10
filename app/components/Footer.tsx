@@ -1,11 +1,8 @@
 const Footer = () => {
   return (
-    <footer className="h-32 container mx-auto flex flex-col justify-center items-center text-white">
+    <footer className="h-32 container mx-auto flex flex-col gap-4 justify-center items-center text-white">
       <p>
-        <strong>ViEWS</strong> by{" "}
-        <a href="" target="_blank">
-          ViEWS
-        </a>
+        <strong>ViEWS</strong> by ViEWS
       </p>
       <a
         href="https://www.flaticon.com/free-icons/youtube"
