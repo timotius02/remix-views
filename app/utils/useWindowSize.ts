@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type window = {
   width: number;
   height: number;
 };
-const useWindowSize = (): [window, Dispatch<SetStateAction<window>>] => {
+const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState<window>({
     width: 0,
     height: 0,
@@ -27,7 +27,7 @@ const useWindowSize = (): [window, Dispatch<SetStateAction<window>>] => {
     }
   }, []);
 
-  return [windowSize, setWindowSize];
+  return windowSize;
 };
 
 export default useWindowSize;

@@ -3,6 +3,7 @@ import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Modal from "react-modal";
+import Versus, { VERSUS_TYPES } from "~/components/Versus";
 import {
   ChoiceSlide,
   HiddenSlide,
@@ -75,6 +76,7 @@ export default function Index() {
   const [hasEnded, setHasEnded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalVideo, setModalVideo] = useState("");
+  const [versusState, setVersusState] = useState<VERSUS_TYPES>("default");
 
   const video1 = data.playlist[index];
   const video2 = data.playlist[index2];
@@ -89,25 +91,31 @@ export default function Index() {
     }
   };
 
+  const correctAnswer = () => {
+    addScore();
+    setVersusState("correct");
+    setTimeout(() => {
+      setVersusState("default");
+      setSliding(true);
+    }, 1000);
+  };
+
   const handleClick = (choice: string) => {
     if (
       choice === "more" &&
       parseInt(video1.viewCount) <= parseInt(video2.viewCount)
     ) {
-      addScore();
-      setTimeout(() => {
-        setSliding(true);
-      }, 1000);
+      correctAnswer();
     } else if (
       choice === "less" &&
       parseInt(video1.viewCount) >= parseInt(video2.viewCount)
     ) {
-      addScore();
-      setTimeout(() => {
-        setSliding(true);
-      }, 1000);
+      correctAnswer();
     } else {
-      setHasEnded(true);
+      setVersusState("incorrect");
+      setTimeout(() => {
+        setHasEnded(true);
+      }, 1500);
     }
   };
 
@@ -130,7 +138,6 @@ export default function Index() {
   };
   const reset = () => {
     setScore(0);
-    setHasEnded(false);
     const index = getRandomNumber(data.playlist.length);
     const index2 = getRandomNumber(data.playlist.length, [index]);
     const index3 = getRandomNumber(data.playlist.length, [index, index2]);
@@ -139,6 +146,8 @@ export default function Index() {
     setIndex2(index2);
     setIndex3(index3);
     setPrevIndices([index, index2, index3]);
+    setVersusState("default");
+    setHasEnded(false);
   };
 
   const openModal = (id: string) => {
@@ -188,16 +197,14 @@ export default function Index() {
       />
       <HiddenSlide video={video3} sliding={sliding} />
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-4 md:p-6">
-        <h1 className="font-bold text-2xl md:text-4xl text-black">VS</h1>
-      </div>
+      <Versus state={versusState} />
 
       <div className="absolute bottom-0 left-0 p-2 md:p-6">
-        <h5 className="text-xl md:text-4xl font-extrabold">Score: {score}</h5>
+        <h5 className="text-xl md:text-2xl font-extrabold">Score: {score}</h5>
       </div>
 
       <div className="absolute bottom-0 right-0 p-2 md:p-6">
-        <h5 className="text-xl md:text-4xl font-extrabold">
+        <h5 className="text-xl md:text-2xl font-extrabold">
           High Score: {highScore}
         </h5>
       </div>

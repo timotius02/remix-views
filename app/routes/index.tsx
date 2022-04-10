@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async () => {
 
 export default function Index() {
   const data = useLoaderData<LoaderData>();
-  const [windowSize, setWindowSize] = useWindowSize();
+  const windowSize = useWindowSize();
 
   const channels =
     windowSize.width > 768 ? data.channels : data.channels.slice(0, 6);
@@ -65,27 +65,29 @@ export default function Index() {
             <span className="block">Do you know your youtubers?</span>
             <span className="block text-red-500">Let&#x27;s find out.</span>
           </h2>
-          <div className="mt-12 inline-flex flex-col md:flex-row rounded-md shadow gap-2 md:gap-6">
-            <Form method="get" action="/search">
-              <div className="flex gap-4 py-3 px-6 bg-white rounded-lg">
-                <input
-                  className="flex-1 outline-0"
-                  type="text"
-                  placeholder="Search"
-                  name="term"
-                />
-                <button type="submit" className="w-6 h-6">
-                  <img src={img} alt="search icon" />
-                </button>
-              </div>
+          <div className="mt-12 inline-flex flex-col md:flex-row rounded-md shadow gap-2 md:gap-6 w-3/4 max-w-xl">
+            <Form
+              method="get"
+              action="/search"
+              className="flex gap-4 py-4 px-6 bg-white rounded-lg w-full"
+            >
+              <input
+                className="flex-1 outline-0"
+                type="text"
+                placeholder="Search"
+                name="term"
+              />
+              <button type="submit" className="w-6 h-6">
+                <img src={img} alt="search icon" />
+              </button>
             </Form>
-            <a
+            {/* <a
               href="/playlist/new"
               className="py-1.5 px-6 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg leading-9"
             >
-              Create Custom Playlist{" "}
+              Custom Playlist{" "}
               <span className="bg-red-300 rounded px-2 py-1 text-sm">BETA</span>
-            </a>
+            </a> */}
           </div>
         </div>
       </div>

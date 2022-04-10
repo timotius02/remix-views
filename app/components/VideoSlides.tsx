@@ -20,7 +20,7 @@ export const ChoiceSlide = ({
   onAnimationComplete = () => {},
   openModal,
 }: ChoiceSlideProps) => {
-  const [windowSize, setWindowSize] = useWindowSize();
+  const windowSize = useWindowSize();
   const [showButtons, setShowButtons] = useState(true);
 
   const handleClick = (choice: string) => {
@@ -92,7 +92,7 @@ export const ChoiceSlide = ({
             )}
           </TransitionGroup>
         </div>
-        <button onClick={openModal}>
+        <button onClick={openModal} title="Watch Video">
           <img
             className="hover:brightness-75"
             src={youtubeIcon}
@@ -114,7 +114,7 @@ export const StaticVideoSlide = ({
   sliding,
   openModal,
 }: staticVideoSlideProps) => {
-  const [windowSize, setWindowSize] = useWindowSize();
+  const windowSize = useWindowSize();
   return (
     <CSSTransition
       in={sliding}
@@ -141,7 +141,7 @@ export const StaticVideoSlide = ({
             </h3>
           </div>
         </div>
-        <button onClick={openModal}>
+        <button onClick={openModal} title="Watch Video">
           <img
             className="hover:brightness-75"
             src={youtubeIcon}
@@ -158,7 +158,7 @@ type HiddenSlide = {
   sliding: boolean;
 };
 export const HiddenSlide = ({ video, sliding }: HiddenSlide) => {
-  const [windowSize, setWindowSize] = useWindowSize();
+  const windowSize = useWindowSize();
   return (
     <CSSTransition
       in={sliding}
