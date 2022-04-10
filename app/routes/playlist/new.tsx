@@ -1,4 +1,4 @@
-import { ActionFunction, json, redirect } from "@remix-run/node";
+import { ActionFunction, redirect } from "@remix-run/node";
 import { Form, useCatch } from "@remix-run/react";
 import { useState } from "react";
 import Navbar from "~/components/Navbar";
@@ -64,7 +64,6 @@ export default function NewPlaylist({ error }: NewPlaylistProps) {
           Create a custom game from any public Youtube Playlist
         </p>
         <Form className="flex flex-col gap-4 text-lg" method="post">
-          {/* <div className="flex gap-4 text-lg items-center"> */}
           <label htmlFor="playlistUrl">Playlist URL</label>
           <input
             className="flex-1 border-b-2 border-gray-400 p-2"
@@ -77,7 +76,6 @@ export default function NewPlaylist({ error }: NewPlaylistProps) {
             required
           />
           {errorMessage && <span className="text-red-500">{errorMessage}</span>}
-          {/* </div> */}
           <button
             className="px-4 py-2 rounded-lg bg-red-500 text-white disabled:opacity-50"
             disabled={input === ""}
