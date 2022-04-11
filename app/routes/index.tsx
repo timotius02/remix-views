@@ -21,7 +21,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async () => {
-  const channels = await db.playlist.findMany({
+  const channelsPromise = db.playlist.findMany({
     orderBy: [
       {
         plays: "desc",
@@ -30,9 +30,9 @@ export const loader: LoaderFunction = async () => {
     where: {
       type: PLAYLIST_TYPE.CHANNEL,
     },
-    take: 12,
+    take: 10,
   });
-  const playlists = await db.playlist.findMany({
+  const playlistsPromise = db.playlist.findMany({
     orderBy: [
       {
         plays: "desc",
@@ -41,8 +41,13 @@ export const loader: LoaderFunction = async () => {
     where: {
       type: PLAYLIST_TYPE.PLAYLIST,
     },
-    take: 12,
+    take: 10,
   });
+
+  const [channels, playlists] = await Promise.all([
+    channelsPromise,
+    playlistsPromise,
+  ]);
 
   return json({ channels, playlists });
 };
@@ -52,10 +57,10 @@ export default function Index() {
   const windowSize = useWindowSize();
 
   const channels =
-    windowSize.width > 768 ? data.channels : data.channels.slice(0, 6);
+    windowSize.width > 1024 ? data.channels : data.channels.slice(0, 6);
 
   const playlists =
-    windowSize.width > 768 ? data.playlists : data.playlists.slice(0, 6);
+    windowSize.width > 1024 ? data.playlists : data.playlists.slice(0, 6);
   return (
     <>
       <Navbar />
@@ -85,11 +90,11 @@ export default function Index() {
         </div>
       </header>
 
-      <section className="container mx-auto px-12">
-        <h1 className="font-light text-3xl my-8 text-white">
+      <section className="container mx-auto px-12 mt-8">
+        <h1 className="font-light text-3xl mb-8 text-white">
           Popular Creators
         </h1>
-        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
           {channels.map((playlist) => (
             <li key={playlist.id}>
               <Link to={`/playlist/${playlist.id}`} prefetch="intent">
