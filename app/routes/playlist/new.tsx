@@ -29,8 +29,9 @@ async function validateHuman(token: string): Promise<boolean> {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-
   const token = formData.get("token") as string;
+
+  console.log(process.env.RECAPTCHA_SECRET);
   const human = await validateHuman(token);
   if (!human) {
     return json({ message: "Bot detected. Unauthorized" }, { status: 401 });
@@ -45,12 +46,15 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
+  console.log("After playlist validation");
   const urlParams = new URLSearchParams(playlistUrl.split("?").pop());
   const id = urlParams.get("list");
 
+  console.log("After id validation");
   if (id !== null) {
+    console.log("Before playlist creation");
     const gamePlaylist = await createPlaylist(id);
-
+    console.log("After playlist creation");
     return redirect(`/playlist/${gamePlaylist.id}`);
   }
   return json(
