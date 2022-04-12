@@ -36,6 +36,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ message: "Bot detected. Unauthorized" }, { status: 401 });
   }
 
+  console.log("After validation");
   const playlistUrl = formData.get("playlistUrl") as string;
   if (!playlistUrl || !playlistUrl.includes("youtube.com/playlist?list=")) {
     return json(
