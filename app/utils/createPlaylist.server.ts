@@ -1,26 +1,18 @@
-import { PLAYLIST_TYPE } from "@prisma/client";
-import { youtube_v3 } from "googleapis";
 import { nanoid } from "nanoid";
 import { db, service } from "~/utils/db.server";
 
-type createaPlaylistInput = {
-  playlistId: string;
-  playlistName: string;
-  playlistThumbnails: youtube_v3.Schema$ThumbnailDetails;
-  playlistType: PLAYLIST_TYPE;
-  maxResults?: number;
-};
-export default async function createPlaylist({
-  playlistId,
-  playlistName,
-  playlistThumbnails,
-  playlistType,
-  maxResults = 50,
-}: createaPlaylistInput) {
+export default async function createPlaylist(id: string) {
+  const results = await service.playlists.list({
+    part: ["snippet"],
+    id: [id],
+    maxResults: 1,
+  });
+
+  const ytPlaylist = results.data.items![0].snippet!;
   const videosResults = await service.playlistItems.list({
     part: ["snippet"],
-    playlistId,
-    maxResults,
+    playlistId: id,
+    maxResults: 50,
   });
 
   const videoIds = (videosResults?.data?.items?.map(
@@ -28,20 +20,20 @@ export default async function createPlaylist({
   ) as string[]) ?? [""];
 
   const videos = await service.videos.list({
-    part: ["snippet", "contentDetails", "statistics"],
+    part: ["snippet", "statistics"],
     id: videoIds,
   });
 
   const playlist = await db.playlist.create({
     data: {
       id: nanoid(),
-      name: playlistName,
-      youtubeId: playlistId,
+      name: ytPlaylist.title!,
+      youtubeId: id,
       createdAt: new Date(),
-      thumbnail: playlistThumbnails.standard
-        ? playlistThumbnails.standard.url!
-        : playlistThumbnails.high!.url!,
-      type: playlistType,
+      thumbnail: ytPlaylist.thumbnails!.standard
+        ? ytPlaylist.thumbnails!.standard.url!
+        : ytPlaylist.thumbnails!.high!.url!,
+      type: "PLAYLIST",
       videos: {
         create: videos!.data!.items!.map((video) => {
           const thumbnails = video!.snippet!.thumbnails;

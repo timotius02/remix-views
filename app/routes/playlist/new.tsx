@@ -48,20 +48,7 @@ export const action: ActionFunction = async ({ request }) => {
   const id = urlParams.get("list");
 
   if (id !== null) {
-    const results = await service.playlists.list({
-      part: ["snippet,contentDetails"],
-      id: [id],
-      maxResults: 1,
-    });
-
-    const playlist = results.data.items![0].snippet!;
-
-    const gamePlaylist = await createPlaylist({
-      playlistId: id,
-      playlistName: playlist.title!,
-      playlistThumbnails: playlist.thumbnails!,
-      playlistType: "PLAYLIST",
-    });
+    const gamePlaylist = await createPlaylist(id);
 
     return redirect(`/playlist/${gamePlaylist.id}`);
   }

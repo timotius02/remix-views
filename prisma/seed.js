@@ -20,7 +20,6 @@ async function getChannel(name) {
 
   const channelId = searchResult.data.items[0].snippet.channelId;
   const channelTitle = searchResult.data.items[0].snippet.channelTitle;
-  const channelThumbnail = searchResult.data.items[0].snippet.thumbnails;
   const playlistId = `UU${channelId.substring(2)}`;
 
   const videosResults = await service.playlistItems.list({
@@ -34,7 +33,7 @@ async function getChannel(name) {
     .join(",");
 
   const videos = await service.videos.list({
-    part: ["snippet,contentDetails,statistics"],
+    part: ["snippet,statistics"],
     id: videoIds,
   });
 
@@ -87,6 +86,22 @@ async function main() {
     "Ariana Grande",
     "Taylor Swift",
     "Smosh",
+
+    "The Weeknd",
+    "Sodapoppin",
+    "Northernlion",
+    "Atrioc",
+    "Stanz",
+    "qtcinderella",
+    "Trash Taste",
+    "Gigguk",
+    "CDawgVA",
+    "The Anime Man",
+    "Technoblade",
+    "TommyInnit",
+    "Mark Rober",
+    "Dhar Mann",
+    "Daily Dose of Internet",
   ];
 
   let channelPromises = [];
