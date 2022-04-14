@@ -202,7 +202,7 @@ export default function Index() {
         onRequestClose={() => setIsModalOpen(false)}
         contentLabel="Example Modal"
         overlayClassName="bg-black/75 fixed w-full h-full top-0 left-0 flex items-center justify-center z-20 overflow-auto"
-        className="bg-white max-w-4xl w-3/4 mx-auto"
+        className="bg-black max-w-4xl w-3/4 mx-auto"
       >
         <div className="relative pb-[56.25%] pt-6 h-0">
           <iframe

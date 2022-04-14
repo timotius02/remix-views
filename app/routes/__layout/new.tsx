@@ -1,5 +1,6 @@
 import {
   ActionFunction,
+  HeadersFunction,
   json,
   LoaderFunction,
   redirect,
@@ -11,8 +12,14 @@ import {
   useTransition,
 } from "@remix-run/react";
 import { useState } from "react";
-import { service, createPlaylist } from "~/utils/db.server";
+import { createPlaylist } from "~/utils/db.server";
 import ReCAPTCHA from "react-google-recaptcha";
+
+export const headers: HeadersFunction = () => {
+  return {
+    "Cache-Control": "max-age=604800, stale-while-revalidate=86400",
+  };
+};
 
 async function validateHuman(token: string): Promise<boolean> {
   const secret = process.env.RECAPTCHA_SECRET;

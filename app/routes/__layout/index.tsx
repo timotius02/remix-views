@@ -1,11 +1,20 @@
 import { Playlist, PLAYLIST_TYPE } from "@prisma/client";
-import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import {
+  HeadersFunction,
+  json,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
-import Footer from "~/components/Footer";
-import Navbar from "~/components/Navbar";
 import { db } from "~/utils/db.server";
 import useWindowSize from "~/utils/useWindowSize";
 import img from "../../../public/search.png";
+
+export const headers: HeadersFunction = () => {
+  return {
+    "Cache-Control": "max-age=604800, stale-while-revalidate=86400",
+  };
+};
 
 export const meta: MetaFunction = () => {
   return {

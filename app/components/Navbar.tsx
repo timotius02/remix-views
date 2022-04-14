@@ -12,7 +12,7 @@ const Navbar = () => {
           </span>
         </a>
         <a
-          href="/playlist/new"
+          href="/new"
           className="sm:py-1.5 sm:px-6 text-white text-center text-base font-semibold rounded-lg leading-9 hover:bg-gray-700"
         >
           Custom Game{" "}
