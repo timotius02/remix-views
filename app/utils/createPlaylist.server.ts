@@ -38,7 +38,7 @@ export default async function createPlaylist(id: string) {
         create: videos!.data!.items!.map((video) => {
           const thumbnails = video!.snippet!.thumbnails;
           return {
-            id: video.id!,
+            youtubeId: video.id!,
             title: video!.snippet!.title!,
             viewCount: video!.statistics!.viewCount!,
             thumbnail: thumbnails!.standard

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
   previewFeatures = ["referentialIntegrity", "fullTextSearch", "fullTextIndex"]
@@ -11,8 +8,10 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
+// TODO: Make this a Many-to-Many relationship when Prisma actually gets that to work
 model Video {
-  id String @id
+  id Int @id @default(autoincrement())
+  youtubeId String
   lastUpdated DateTime @updatedAt
   title String
   viewCount String // Viewcount is string bc Youtube API returns string and I don't want to deal with BIGINTs
@@ -24,7 +23,7 @@ model Video {
 }
 
 model Playlist {
-  id String @id   // UUID; we don't use Youtube's ID to allow User generated playlist (possibly?)
+  id String @id   // UUID
   youtubeId String?
   name String
   createdAt DateTime

@@ -1,5 +1,5 @@
 import { Playlist } from "@prisma/client";
-import img from "../../public/search.png";
+import img from "../../../public/search.png";
 import { json, LoaderFunction } from "@remix-run/node";
 import { Form, Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import { db } from "~/utils/db.server";
@@ -33,7 +33,6 @@ export default function NewPlaylist() {
 
   return (
     <>
-      <Navbar />
       <Form method="get">
         <div className="bg-white p-6 rounded max-w-3xl mx-auto w-3/4 my-8 flex gap-4">
           <input
@@ -73,15 +72,6 @@ export default function NewPlaylist() {
           ))}
         </ul>
       </section>
-
-      {/* <div>
-        <a
-          href="https://www.flaticon.com/free-icons/search"
-          title="search icons"
-        >
-          Search icons created by Catalin Fertu - Flaticon
-        </a>
-      </div> */}
     </>
   );
 }

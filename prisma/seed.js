@@ -52,7 +52,7 @@ async function getChannel(name) {
         create: videos.data.items.map((video) => {
           const thumbnails = video.snippet.thumbnails;
           return {
-            id: video.id,
+            youtubeId: video.id,
             title: video.snippet.title,
             viewCount: video.statistics.viewCount,
             thumbnail: thumbnails.standard
@@ -76,40 +76,37 @@ async function main() {
     "Disguised Toast",
     "Pokimane",
     "Ludwig",
-    "Mr. Beast",
-    "Dream",
-    "Jacksepticeye",
-    "Blackpink",
-    "Justin Bieber",
-    "Dude Perfect",
-    "Ed Sheeran",
-    "Ariana Grande",
-    "Taylor Swift",
-    "Smosh",
+    // "Mr. Beast",
+    // "Dream",
+    // "Jacksepticeye",
+    // "Blackpink",
+    // "Justin Bieber",
+    // "Dude Perfect",
+    // "Ed Sheeran",
+    // "Ariana Grande",
+    // "Taylor Swift",
+    // "Smosh",
 
-    "The Weeknd",
-    "Sodapoppin",
-    "Northernlion",
-    "Atrioc",
-    "Stanz",
-    "qtcinderella",
-    "Trash Taste",
-    "Gigguk",
-    "CDawgVA",
-    "The Anime Man",
-    "Technoblade",
-    "TommyInnit",
-    "Mark Rober",
-    "Dhar Mann",
-    "Daily Dose of Internet",
+    // "The Weeknd",
+    // "Sodapoppin",
+    // "Northernlion",
+    // "Atrioc",
+    // "Stanz",
+    // "qtcinderella",
+    // "Trash Taste",
+    // "Gigguk",
+    // "CDawgVA",
+    // "The Anime Man",
+    // "Technoblade",
+    // "TommyInnit",
+    // "Mark Rober",
+    // "Dhar Mann",
+    // "Daily Dose of Internet",
   ];
 
-  let channelPromises = [];
   for (let channel of channels) {
-    channelPromises.push(getChannel(channel));
+    await getChannel(channel);
   }
-
-  await Promise.all(channelPromises);
 }
 
 main()

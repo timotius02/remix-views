@@ -1,6 +1,6 @@
 import { Video } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Modal from "react-modal";
 import Versus, { VERSUS_TYPES } from "~/components/Versus";
@@ -32,17 +32,6 @@ type PlaylistLoaderData = {
 
 export const loader: LoaderFunction = async ({ params }) => {
   // This is getting called when the page is preload. Need to fix
-  await db.playlist.update({
-    where: {
-      id: params.id,
-    },
-    data: {
-      plays: {
-        increment: 1,
-      },
-    },
-  });
-
   const playlist = await db.video.findMany({
     where: {
       playlistId: params.id,
@@ -66,6 +55,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function Index() {
   const data = useLoaderData<PlaylistLoaderData>();
+  const fetcher = useFetcher();
   const [highScore, setHighscore] = useLocalStorage(`highscore-${data.id}`, 0);
   const [score, setScore] = useState(0);
   const [index, setIndex] = useState(data.index);
@@ -84,15 +74,11 @@ export default function Index() {
 
   Modal.setAppElement("body");
 
-  const addScore = () => {
+  const correctAnswer = () => {
     setScore(score + 1);
     if (score + 1 > highScore) {
       setHighscore(score + 1);
     }
-  };
-
-  const correctAnswer = () => {
-    addScore();
     setVersusState("correct");
     setTimeout(() => {
       setVersusState("default");
@@ -115,6 +101,9 @@ export default function Index() {
       setVersusState("incorrect");
       setTimeout(() => {
         setHasEnded(true);
+
+        // Record play for analytics
+        fetcher.submit({ id: data.id }, { method: "post", action: "/plays" });
       }, 1500);
     }
   };
@@ -186,14 +175,14 @@ export default function Index() {
       <StaticSlide
         video={video1}
         sliding={sliding}
-        openModal={() => openModal(video1.id)}
+        openModal={() => openModal(video1.youtubeId)}
       />
       <ChoiceSlide
         video={video2}
         onClick={(choice) => handleClick(choice)}
         sliding={sliding}
         onAnimationComplete={onAnimationsComplete}
-        openModal={() => openModal(video2.id)}
+        openModal={() => openModal(video2.youtubeId)}
       />
       <HiddenSlide video={video3} sliding={sliding} />
 

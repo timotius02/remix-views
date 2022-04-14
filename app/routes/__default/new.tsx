@@ -11,7 +11,6 @@ import {
   useTransition,
 } from "@remix-run/react";
 import { useState } from "react";
-import Navbar from "~/components/Navbar";
 import { service, createPlaylist } from "~/utils/db.server";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -31,13 +30,11 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const token = formData.get("token") as string;
 
-  console.log(process.env.RECAPTCHA_SECRET);
   const human = await validateHuman(token);
   if (!human) {
     return json({ message: "Bot detected. Unauthorized" }, { status: 401 });
   }
 
-  console.log("After validation");
   const playlistUrl = formData.get("playlistUrl") as string;
   if (!playlistUrl || !playlistUrl.includes("youtube.com/playlist?list=")) {
     return json(
@@ -46,15 +43,11 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  console.log("After playlist validation");
   const urlParams = new URLSearchParams(playlistUrl.split("?").pop());
   const id = urlParams.get("list");
 
-  console.log("After id validation");
   if (id !== null) {
-    console.log("Before playlist creation");
     const gamePlaylist = await createPlaylist(id);
-    console.log("After playlist creation");
     return redirect(`/playlist/${gamePlaylist.id}`);
   }
   return json(
@@ -78,7 +71,6 @@ export default function NewPlaylist() {
 
   return (
     <>
-      <Navbar />
       <div className="bg-white mt-12 w-11/12 max-w-2xl mx-auto p-6 md:p-10 rounded-lg">
         <h1 className="text-3xl sm:text-4xl text-center font-extrabold mb-2">
           Custom Playlist

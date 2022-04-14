@@ -5,7 +5,7 @@ import Footer from "~/components/Footer";
 import Navbar from "~/components/Navbar";
 import { db } from "~/utils/db.server";
 import useWindowSize from "~/utils/useWindowSize";
-import img from "../../public/search.png";
+import img from "../../../public/search.png";
 
 export const meta: MetaFunction = () => {
   return {
@@ -63,7 +63,6 @@ export default function Index() {
     windowSize.width > 1024 ? data.playlists : data.playlists.slice(0, 6);
   return (
     <>
-      <Navbar />
       <header>
         <div className="text-center w-full mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 z-20">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
@@ -140,7 +139,6 @@ export default function Index() {
           ))}
         </ul>
       </section>
-      <Footer />
     </>
   );
 }
