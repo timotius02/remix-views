@@ -77,8 +77,8 @@ export default function NewPlaylist() {
   const transition = useTransition();
 
   return (
-    <>
-      <div className="bg-white mt-12 w-11/12 max-w-2xl mx-auto p-6 md:p-10 rounded-lg">
+    <div className="flex-1 flex items-center justify-center">
+      <div className="bg-white w-11/12 max-w-2xl p-6 md:p-10 rounded-lg">
         <h1 className="text-3xl sm:text-4xl text-center font-extrabold mb-2">
           Custom Playlist
         </h1>
@@ -113,6 +113,6 @@ export default function NewPlaylist() {
           </button>
         </Form>
       </div>
-    </>
+    </div>
   );
 }

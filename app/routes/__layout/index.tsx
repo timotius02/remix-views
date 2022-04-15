@@ -19,14 +19,6 @@ export const headers: HeadersFunction = () => {
   };
 };
 
-export const meta: MetaFunction = () => {
-  return {
-    title: `The VIEWS Game`,
-    description:
-      "Do you think you can guess the views of your favorite creators?",
-  };
-};
-
 type LoaderData = {
   channels: Playlist[];
   playlists: Playlist[];

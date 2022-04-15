@@ -13,15 +13,6 @@ import { db } from "~/utils/db.server";
 import getRandomNumber from "~/utils/getRandomNumber";
 import useLocalStorage from "~/utils/useLocalStorage";
 
-export const meta: MetaFunction = () => {
-  return {
-    title: `Guess view for your favorite creators | The VIEWS Game`,
-    description:
-      "Do you think you can guess the views of your favorite creators?",
-    "theme-color": "#000",
-  };
-};
-
 type PlaylistLoaderData = {
   playlist: Video[];
   index: number;

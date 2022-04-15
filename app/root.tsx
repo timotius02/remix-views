@@ -15,20 +15,28 @@ export function links() {
   return [{ rel: "stylesheet", href: styles }];
 }
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Views Game",
-  viewport: "width=device-width,initial-scale=1",
-});
+export const meta: MetaFunction = () => {
+  const description =
+    "The Classic game of Higher and Lower, with a twist. Play with your friends and see who can guess the views of the creators of the most popular videos on YouTube.";
+  const title = "The Views Game";
+  const url = "https://views-game.vercel.app";
+  return {
+    charset: "utf-8",
+    viewport: "width=device-width,initial-scale=1",
+    title,
+    canonical: url,
+    description,
+    "theme-color": "#1b1e25",
+    "og:title": title,
+    "og:url": url,
+    "og:description": description,
+    "og:image": "",
+    "og:type": "website",
 
-export async function loader() {
-  return json({
-    ENV: {
-      RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
-    },
-  });
-}
-
+    "twitter:card": "summary_large_image",
+    "twitter:creator": "@timsitorus",
+  };
+};
 export default function App() {
   const data = useLoaderData();
   return (
@@ -39,11 +47,6 @@ export default function App() {
       </head>
       <body className="bg-gray-800">
         <Outlet />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
-          }}
-        />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
