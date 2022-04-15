@@ -122,7 +122,7 @@ export default function Index() {
         <h1 className="font-light text-3xl my-8 text-white">
           Popular Playlists
         </h1>
-        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
           {playlists.map((playlist) => (
             <li key={playlist.id}>
               <Link to={`/playlist/${playlist.id}`} prefetch="intent">

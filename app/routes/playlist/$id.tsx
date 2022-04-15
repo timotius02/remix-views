@@ -1,7 +1,7 @@
 import { Video } from "@prisma/client";
-import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json, LoaderFunction } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Modal from "react-modal";
 import Versus, { VERSUS_TYPES } from "~/components/Versus";
 import {
@@ -12,6 +12,7 @@ import {
 import { db } from "~/utils/db.server";
 import getRandomNumber from "~/utils/getRandomNumber";
 import useLocalStorage from "~/utils/useLocalStorage";
+import EndScreen from "~/components/EndScreen";
 
 type PlaylistLoaderData = {
   playlist: Video[];
@@ -58,6 +59,7 @@ export default function Index() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalVideo, setModalVideo] = useState("");
   const [versusState, setVersusState] = useState<VERSUS_TYPES>("default");
+  let confetti: any;
 
   const video1 = data.playlist[index];
   const video2 = data.playlist[index2];
@@ -122,6 +124,7 @@ export default function Index() {
     const index2 = getRandomNumber(data.playlist.length, [index]);
     const index3 = getRandomNumber(data.playlist.length, [index, index2]);
 
+    confetti.clear();
     setIndex(index);
     setIndex2(index2);
     setIndex3(index3);
@@ -135,32 +138,7 @@ export default function Index() {
     setModalVideo(id);
   };
   return hasEnded ? (
-    <div className="w-screen h-screen flex flex-col justify-center items-center">
-      <h1 className="text-3xl font-extrabold text-white sm:text-4xl mb-6">
-        You finished the game!
-      </h1>
-      <h2 className="text-4xl font-extrabold text-white sm:text-6xl mt-6 mb-2">
-        Your score: <span className="text-red-500">{score}</span>
-      </h2>
-      <h2 className="text-3xl font-extrabold text-white sm:text-4xl mb-6">
-        High Score: {highScore}
-      </h2>
-      <div className="flex mt-6 gap-2 flex-col md:flex-row md:gap-6">
-        <Link
-          to="/"
-          className="flex-1 bg-transparent rounded-full border-2 border-white px-12 py-6 text-white hover:bg-white hover:text-black text-base font-bold text-center whitespace-nowrap"
-        >
-          Back to Menu
-        </Link>
-
-        <button
-          className="flex-1 bg-transparent rounded-full border-2 border-white px-12 py-6 text-white hover:bg-white hover:text-black text-base font-bold"
-          onClick={reset}
-        >
-          Play again
-        </button>
-      </div>
-    </div>
+    <EndScreen score={score} highScore={highScore} resetGame={reset} />
   ) : (
     <div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden relative text-white">
       <StaticSlide

@@ -5,12 +5,13 @@ import { Form, Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { useState } from "react";
 import { Prisma } from "@prisma/client";
-import { Pagination } from "~/components/Pagination";
+import Pagination from "~/components/Pagination";
 
 const SEARCH_PAGE_SIZE = 25;
 
 type SearchLoaderData = {
   playlists: Playlist[];
+  page: number;
   prev: string | null;
   next: string | null;
 };
@@ -59,7 +60,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     results.pop();
   }
 
-  return json({ playlists: results, next, prev });
+  return json({ playlists: results, page, next, prev });
 };
 export default function NewPlaylist() {
   const data = useLoaderData<SearchLoaderData>();
@@ -107,7 +108,7 @@ export default function NewPlaylist() {
             </li>
           ))}
         </ul>
-        <Pagination prev={data.prev} next={data.next} />
+        <Pagination page={data.page} prev={data.prev} next={data.next} />
       </section>
     </>
   );
