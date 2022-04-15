@@ -12,7 +12,10 @@ import img from "../../../public/search.png";
 
 export const headers: HeadersFunction = () => {
   return {
-    "Cache-Control": "max-age=604800, stale-while-revalidate=86400",
+    "Cache-Control":
+      process.env.NODE_ENV === "production"
+        ? "max-age=604800, stale-while-revalidate=86400"
+        : "",
   };
 };
 

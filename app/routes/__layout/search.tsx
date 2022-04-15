@@ -1,29 +1,65 @@
-import { Playlist } from "@prisma/client";
+import { Playlist, PLAYLIST_TYPE } from "@prisma/client";
 import img from "../../../public/search.png";
 import { json, LoaderFunction } from "@remix-run/node";
 import { Form, Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { useState } from "react";
-import Navbar from "~/components/Navbar";
+import { Prisma } from "@prisma/client";
+import { Pagination } from "~/components/Pagination";
+
+const SEARCH_PAGE_SIZE = 25;
 
 type SearchLoaderData = {
   playlists: Playlist[];
+  prev: string | null;
+  next: string | null;
 };
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const term = url.searchParams.get("term");
+  const page = parseInt(url.searchParams.get("page") || "1");
+  const type = url.searchParams.get("type");
+  let where = {};
 
-  if (!term) {
-    return json({ playlists: [] });
+  if (type) {
+    where = {
+      type: {
+        equals:
+          type === "playlist" ? PLAYLIST_TYPE.PLAYLIST : PLAYLIST_TYPE.CHANNEL,
+      },
+    };
   }
-  const results = await db.playlist.findMany({
-    where: {
+  if (term) {
+    where = {
       name: {
         search: term,
       },
-    },
-  });
-  return json({ playlists: results });
+      ...where,
+    };
+  }
+
+  let query: Prisma.PlaylistFindManyArgs = {
+    skip: (page - 1) * SEARCH_PAGE_SIZE,
+    take: SEARCH_PAGE_SIZE + 1,
+    where,
+  };
+
+  const results = await db.playlist.findMany(query);
+
+  let prev, next;
+  if (page !== 1) {
+    url.searchParams.set("page", (page - 1).toString());
+    prev = url.pathname + url.search;
+    url.searchParams.set("page", page.toString());
+  }
+
+  if (results.length > SEARCH_PAGE_SIZE) {
+    url.searchParams.set("page", (page + 1).toString());
+    next = url.pathname + url.search;
+    results.pop();
+  }
+
+  return json({ playlists: results, next, prev });
 };
 export default function NewPlaylist() {
   const data = useLoaderData<SearchLoaderData>();
@@ -50,8 +86,8 @@ export default function NewPlaylist() {
         </div>
       </Form>
 
-      <section className="container mx-auto px-12 flex flex-col gap-4">
-        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <section className="flex-1 container mx-auto px-12 flex flex-col justify-between">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
           {data.playlists.map((playlist) => (
             <li key={playlist.id}>
               <Link to={`/playlist/${playlist.id}`} prefetch="intent">
@@ -71,6 +107,7 @@ export default function NewPlaylist() {
             </li>
           ))}
         </ul>
+        <Pagination prev={data.prev} next={data.next} />
       </section>
     </>
   );

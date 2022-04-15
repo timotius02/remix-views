@@ -1,6 +1,8 @@
 const { PrismaClient, PLAYLIST_TYPE } = require("@prisma/client");
 const { google } = require("googleapis");
 const { nanoid } = require("nanoid");
+const { channels } = require("./channels");
+
 const prisma = new PrismaClient();
 
 require("dotenv").config();
@@ -16,6 +18,7 @@ async function getChannel(name) {
     q: name,
     maxResults: 1,
     type: "channel",
+    order: "viewCount",
   });
 
   const channelId = searchResult.data.items[0].snippet.channelId;
@@ -66,44 +69,6 @@ async function getChannel(name) {
 }
 
 async function main() {
-  const channels = [
-    "LilyPichu",
-    "Michael Reeves",
-    "Linus Tech Tips",
-    "Valkyrae",
-    "OfflineTV",
-    "Mizkif",
-    "Disguised Toast",
-    "Pokimane",
-    "Ludwig",
-    // "Mr. Beast",
-    // "Dream",
-    // "Jacksepticeye",
-    // "Blackpink",
-    // "Justin Bieber",
-    // "Dude Perfect",
-    // "Ed Sheeran",
-    // "Ariana Grande",
-    // "Taylor Swift",
-    // "Smosh",
-
-    // "The Weeknd",
-    // "Sodapoppin",
-    // "Northernlion",
-    // "Atrioc",
-    // "Stanz",
-    // "qtcinderella",
-    // "Trash Taste",
-    // "Gigguk",
-    // "CDawgVA",
-    // "The Anime Man",
-    // "Technoblade",
-    // "TommyInnit",
-    // "Mark Rober",
-    // "Dhar Mann",
-    // "Daily Dose of Internet",
-  ];
-
   for (let channel of channels) {
     await getChannel(channel);
   }
