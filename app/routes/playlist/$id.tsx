@@ -23,7 +23,6 @@ type PlaylistLoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  // This is getting called when the page is preload. Need to fix
   const playlist = await db.video.findMany({
     where: {
       playlistId: params.id,

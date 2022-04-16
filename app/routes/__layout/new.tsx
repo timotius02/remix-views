@@ -55,7 +55,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (id !== null) {
     const gamePlaylist = await createPlaylist(id);
-    return redirect(`/playlist/${gamePlaylist.id}`);
+    return redirect(`/success/${gamePlaylist.id}`);
   }
   return json(
     { message: "Invalid Playlist URL. Remember Playlist URL must be Public." },
@@ -106,7 +106,7 @@ export default function NewPlaylist() {
           />
           <input type="hidden" name="token" value={token} />
           <button
-            className="px-4 py-2 rounded-lg bg-red-500 text-white disabled:opacity-50"
+            className="py-4 rounded bg-red-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={input === "" || transition.state !== "idle"}
           >
             {transition.state === "idle" ? "Submit" : transition.state}
