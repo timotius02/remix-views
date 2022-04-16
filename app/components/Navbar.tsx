@@ -1,6 +1,6 @@
 const Navbar = () => {
   return (
-    <nav className="container mx-auto px-6 md:px-12 flex items-center justify-between h-16">
+    <nav className="w-5/6 mx-auto flex items-center justify-between h-16">
       <div className="w-full justify-between flex items-center">
         <a className="flex-shrink-0" href="/">
           <span className="text-white">

@@ -1,4 +1,4 @@
-import { json, MetaFunction } from "@remix-run/node";
+import { json, LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -10,14 +10,43 @@ import {
 } from "@remix-run/react";
 
 import styles from "./styles/app.css";
+import image from "../public/image.png";
 
-export function links() {
-  return [{ rel: "stylesheet", href: styles }];
-}
+export const links: LinksFunction = () => {
+  return [
+    { rel: "stylesheet", href: styles },
+    {
+      rel: "icon",
+      href: "/favicon.png",
+      type: "image/png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "32x32",
+      href: "/favicon-32x32.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "16x16",
+      href: "/favicon-16x16.png",
+    },
+    {
+      rel: "apple-touch-icon",
+      sizes: "180x180",
+      href: "/apple-touch-icon.png",
+    },
+    {
+      rel: "manifest",
+      href: "site.webmanifest",
+    },
+  ];
+};
 
 export const meta: MetaFunction = () => {
   const description =
-    "The Classic game of Higher and Lower, with a twist. Play with your friends and see who can guess the views of the creators of the most popular videos on YouTube.";
+    "The Classic game of Higher and Lower, with a twist. From your favorite content creators to iconic internet moments, play with your friends and see who can guess the which videos has more views.";
   const title = "The Views Game";
   const url = "https://views-game.vercel.app";
   return {
@@ -28,10 +57,12 @@ export const meta: MetaFunction = () => {
     description,
     "theme-color": "#1b1e25",
     "og:title": title,
+    "og:type": "website",
+    "og:image": image,
     "og:url": url,
     "og:description": description,
-    "og:image": "",
-    "og:type": "website",
+    "og:site_name": "Views Game",
+    "og:determiner": "the",
 
     "twitter:card": "summary_large_image",
     "twitter:creator": "@timsitorus",

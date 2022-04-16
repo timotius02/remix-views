@@ -1,10 +1,5 @@
 import { Playlist, PLAYLIST_TYPE } from "@prisma/client";
-import {
-  HeadersFunction,
-  json,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import { HeadersFunction, json, LoaderFunction } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import useWindowSize from "~/utils/useWindowSize";
@@ -14,7 +9,7 @@ export const headers: HeadersFunction = () => {
   return {
     "Cache-Control":
       process.env.NODE_ENV === "production"
-        ? "max-age=604800, stale-while-revalidate=86400"
+        ? "max-age=60, stale-while-revalidate=72000"
         : "",
   };
 };
@@ -93,7 +88,7 @@ export default function Index() {
         </div>
       </header>
 
-      <section className="container mx-auto px-12 mt-8">
+      <section className="w-5/6 mx-auto mt-8">
         <h1 className="font-light text-3xl mb-8 text-white">
           Popular Creators
         </h1>
@@ -118,7 +113,7 @@ export default function Index() {
           ))}
         </ul>
       </section>
-      <section className="container mx-auto px-12">
+      <section className="w-5/6 mx-auto">
         <h1 className="font-light text-3xl my-8 text-white">
           Popular Playlists
         </h1>
