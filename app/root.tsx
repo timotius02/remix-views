@@ -66,6 +66,7 @@ export const meta: MetaFunction = () => {
 
     "twitter:card": "summary_large_image",
     "twitter:creator": "@timsitorus",
+    "google-site-verification": "viLQnuq6sInomru",
   };
 };
 export default function App() {
