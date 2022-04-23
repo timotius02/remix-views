@@ -58,7 +58,6 @@ export default function Index() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalVideo, setModalVideo] = useState("");
   const [versusState, setVersusState] = useState<VERSUS_TYPES>("default");
-  let confetti: any;
 
   const video1 = data.playlist[index];
   const video2 = data.playlist[index2];
@@ -123,7 +122,6 @@ export default function Index() {
     const index2 = getRandomNumber(data.playlist.length, [index]);
     const index3 = getRandomNumber(data.playlist.length, [index, index2]);
 
-    confetti.clear();
     setIndex(index);
     setIndex2(index2);
     setIndex3(index3);

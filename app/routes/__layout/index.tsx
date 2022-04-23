@@ -89,9 +89,17 @@ export default function Index() {
       </header>
 
       <section className="w-5/6 mx-auto mt-8">
-        <h1 className="font-light text-3xl mb-8 text-white">
-          Popular Creators
-        </h1>
+        <div className="flex justify-between items-baseline">
+          <h1 className="font-semibold text-3xl mb-8 text-white">
+            Popular Creators
+          </h1>
+          <Link
+            to={`/search?type=channel`}
+            className="text-white text-2xl hover:underline"
+          >
+            Browse all creators
+          </Link>
+        </div>
         <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
           {channels.map((playlist) => (
             <li key={playlist.id}>
@@ -113,10 +121,18 @@ export default function Index() {
           ))}
         </ul>
       </section>
-      <section className="w-5/6 mx-auto">
-        <h1 className="font-light text-3xl my-8 text-white">
-          Popular Playlists
-        </h1>
+      <section className="w-5/6 mx-auto my-8">
+        <div className="flex justify-between items-baseline">
+          <h1 className="font-semibold text-3xl mb-8 text-white">
+            Popular Playlists
+          </h1>
+          <Link
+            to={`/search?type=playlist`}
+            className="text-white text-2xl hover:underline"
+          >
+            Browse All Playlists
+          </Link>
+        </div>
         <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
           {playlists.map((playlist) => (
             <li key={playlist.id}>
