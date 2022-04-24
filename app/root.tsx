@@ -58,14 +58,14 @@ export const meta: MetaFunction = () => {
     "theme-color": "#1b1e25",
     "og:title": title,
     "og:type": "website",
-    "og:image": image,
+    "og:image": url + image,
     "og:url": url,
     "og:description": description,
     "og:site_name": "Views Game",
     "og:determiner": "the",
 
     "twitter:card": "summary_large_image",
-    "twitter:image": "https://views-game.vercel.app" + image,
+    "twitter:image": url + image,
     "twitter:creator": "@timsitorus",
     "google-site-verification": "viLQnuq6sInomruYthIiKWM-mdPNgdAGpXBwU692kY8",
   };
