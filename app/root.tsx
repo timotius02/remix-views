@@ -59,6 +59,7 @@ export const meta: MetaFunction = () => {
     "og:title": title,
     "og:type": "website",
     "og:image": url + image,
+    "og:image:alt": "The Views Game",
     "og:url": url,
     "og:description": description,
     "og:site_name": "Views Game",
