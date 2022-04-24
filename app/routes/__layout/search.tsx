@@ -6,6 +6,7 @@ import { db } from "~/utils/db.server";
 import { useState } from "react";
 import { Prisma } from "@prisma/client";
 import Pagination from "~/components/Pagination";
+import DropDown, { PlaylistType } from "~/components/Dropdown";
 
 const SEARCH_PAGE_SIZE = 25;
 
@@ -19,14 +20,14 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const term = url.searchParams.get("term");
   const page = parseInt(url.searchParams.get("page") || "1");
-  const type = url.searchParams.get("type");
+  const type = url.searchParams.get("type") as PlaylistType;
   let where = {};
 
-  if (type) {
+  if (type && type !== "All") {
     where = {
       type: {
         equals:
-          type === "playlist" ? PLAYLIST_TYPE.PLAYLIST : PLAYLIST_TYPE.CHANNEL,
+          type === "Playlists" ? PLAYLIST_TYPE.PLAYLIST : PLAYLIST_TYPE.CHANNEL,
       },
     };
   }
@@ -68,6 +69,11 @@ export default function NewPlaylist() {
   const term = searchParams.getAll("term");
   const [value, setValue] = useState(term[0] ?? "");
 
+  const type = searchParams.getAll("type") as PlaylistType[];
+  const [selectedType, setSelectedType] = useState<PlaylistType>(
+    (type[0] as PlaylistType) ?? "All"
+  );
+
   return (
     <>
       <Form method="get">
@@ -80,7 +86,11 @@ export default function NewPlaylist() {
             name="term"
             onInput={(e) => setValue((e.target as HTMLInputElement).value)}
           />
-
+          <input type="hidden" name="type" value={selectedType} />
+          <DropDown
+            value={selectedType}
+            onChange={(type) => setSelectedType(type)}
+          />
           <button className="w-6 h-6">
             <img src={img} alt="search icon" />
           </button>
