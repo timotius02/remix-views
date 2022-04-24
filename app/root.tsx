@@ -46,7 +46,7 @@ export const links: LinksFunction = () => {
 
 export const meta: MetaFunction = () => {
   const description =
-    "The Classic game of Higher and Lower, with a twist. From your favorite content creators to iconic internet moments, play with your friends and see who can guess the which videos has more views.";
+    "The Classic game of Higher and Lower, with a Youtube twist. From your favorite content creators to iconic internet moments, play with your friends and see who can guess the which videos has more views.";
   const title = "The Views Game";
   const url = "https://views-game.vercel.app";
   return {
