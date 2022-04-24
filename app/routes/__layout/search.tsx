@@ -77,7 +77,7 @@ export default function NewPlaylist() {
   return (
     <>
       <Form method="get">
-        <div className="bg-white p-6 rounded max-w-3xl mx-auto w-3/4 my-8 flex gap-4">
+        <div className="bg-white p-6 rounded max-w-3xl mx-auto w-3/4 my-8 flex items-center gap-4">
           <input
             className="flex-1 outline-0"
             type="text"

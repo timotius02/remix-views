@@ -94,7 +94,7 @@ export default function Index() {
             Popular Creators
           </h1>
           <Link
-            to={`/search?type=channel`}
+            to={`/search?type=Channels`}
             className="text-white text-2xl hover:underline"
           >
             Browse all creators
@@ -127,7 +127,7 @@ export default function Index() {
             Popular Playlists
           </h1>
           <Link
-            to={`/search?type=playlist`}
+            to={`/search?type=Playlists`}
             className="text-white text-2xl hover:underline"
           >
             Browse All Playlists
