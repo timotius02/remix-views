@@ -65,6 +65,7 @@ export const meta: MetaFunction = () => {
     "og:determiner": "the",
 
     "twitter:card": "summary_large_image",
+    "twitter:image": image,
     "twitter:creator": "@timsitorus",
     "google-site-verification": "viLQnuq6sInomruYthIiKWM-mdPNgdAGpXBwU692kY8",
   };
