@@ -1,34 +1,62 @@
-# Welcome to Remix!
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://views-game.vercel.app/">
+    <img src="public/image.png" alt="Logo">
+  </a>
 
-- [Remix Docs](https://remix.run/docs)
+  <h3 align="center">VIEWS GAME</h3>
 
-## Deployment
+  <p align="center">
+    The classic game of Higher-or-Lower, with a Youtube twist. 
+    <br />
+    <a href="https://views-game.vercel.app/">View Demo</a>
+    ·
+    <a href="https://github.com/timotius02/views-game/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/timotius02/views-game/issues">Request Feature</a>
+  </p>
+</div>
 
-After having run the `create-remix` command and selected "Vercel" as a deployment target, you only need to [import your Git repository](https://vercel.com/new) into Vercel, and it will be deployed.
+<!-- ABOUT THE PROJECT -->
 
-If you'd like to avoid using a Git repository, you can also deploy the directory by running [Vercel CLI](https://vercel.com/cli):
+## About The Project
 
-```sh
-npm i -g vercel
-vercel
-```
+Inspired by the original Higher and Lower Game, this game has the player make guesses on whether a video has more or less views than another. You can guess videos made by specific creators or make custom playlists based on a public Youtube playlist.
 
-It is generally recommended to use a Git repository, because future commits will then automatically be deployed by Vercel, through its [Git Integration](https://vercel.com/docs/concepts/git).
+### Built With
 
-## Development
+- [Remix](https://remix.run/)
+- [React.js](https://reactjs.org/)
+- [Tailwind](https://tailwindcss.com)
+- [Prisma](https://www.prisma.io/)
+- [Planetscale](https://planetscale.com/)
+- [Youtube Data API](https://developers.google.com/youtube/v3)
+- [Vercel](https://vercel.com/)
 
-To run your Remix app locally, make sure your project's local dependencies are installed:
+<!-- ROADMAP -->
 
-```sh
-npm install
-```
+## Roadmap
 
-Afterwards, start the Remix development server like so:
+- [x] Add Custom playlist support for public youtube playlist
+- [x] Add Search Page
+- [ ] Add script to continually poll Youtube to update view counts
+- [ ] Migrate Video-to-Playlist relation to Many-to-many after Prisma fixes their referrential integrity issues.
+- [ ] Add more creators and playlists (Ongoing)
 
-```sh
-npm run dev
-```
+<!-- CONTACT -->
 
-Open up [http://localhost:3000](http://localhost:3000) and you should be ready to go!
+## Contact
 
-If you're used to using the `vercel dev` command provided by [Vercel CLI](https://vercel.com/cli) instead, you can also use that, but it's not needed.
+Timotius Sitorus - [@timsitorus](https://twitter.com/timsitorus)
+
+Project Link: [https://github.com/timotius02/views-game](https://github.com/timotius02/views-game)
+
+<!-- ACKNOWLEDGMENTS -->
+
+## Acknowledgments
+
+Thanks to these
+
+- [The OG Higher or Lower](https://choosealicense.comhttp://www.higherlowergame.com/) where I drew a lot of my inspirations from
+- [Flaticons](https://www.flaticon.com/) for the icons
