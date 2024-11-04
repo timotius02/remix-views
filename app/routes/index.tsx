@@ -1,25 +1,11 @@
-import { Playlist, PLAYLIST_TYPE } from "@prisma/client";
-import { HeadersFunction, json, LoaderFunction } from "@remix-run/node";
+import { PLAYLIST_TYPE } from "@prisma/client";
+import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import useWindowSize from "~/utils/useWindowSize";
-import img from "../../../public/search.png";
 
-export const headers: HeadersFunction = () => {
-  return {
-    "Cache-Control":
-      process.env.NODE_ENV === "production"
-        ? "max-age=60, stale-while-revalidate=72000"
-        : "",
-  };
-};
 
-type LoaderData = {
-  channels: Playlist[];
-  playlists: Playlist[];
-};
-
-export const loader: LoaderFunction = async () => {
+export const loader= async () => {
   const channelsPromise = db.playlist.findMany({
     orderBy: [
       {
@@ -47,12 +33,11 @@ export const loader: LoaderFunction = async () => {
     channelsPromise,
     playlistsPromise,
   ]);
-
   return json({ channels, playlists });
 };
 
 export default function Index() {
-  const data = useLoaderData<LoaderData>();
+  const data = useLoaderData<typeof loader>();
   const windowSize = useWindowSize();
 
   const channels =
@@ -75,13 +60,13 @@ export default function Index() {
               className="flex gap-4 py-4 px-6 bg-white rounded-lg w-full"
             >
               <input
-                className="flex-1 outline-0"
+                className="flex-1 outline-0 bg-white"
                 type="text"
                 placeholder="Search"
                 name="term"
               />
               <button type="submit" className="w-6 h-6">
-                <img src={img} alt="search icon" />
+                <img src="/search.png" alt="search icon" />
               </button>
             </Form>
           </div>
@@ -106,7 +91,7 @@ export default function Index() {
               <Link to={`/playlist/${playlist.id}`} prefetch="intent">
                 <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105 relative group">
                   <img
-                    alt={`${playlist.name} Channel Image`}
+                    alt={`${playlist.name} Channel`}
                     src={playlist.thumbnail}
                     className="max-h-40 w-full object-cover group-hover:brightness-50"
                   />
@@ -139,7 +124,7 @@ export default function Index() {
               <Link to={`/playlist/${playlist.id}`} prefetch="intent">
                 <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105 relative group">
                   <img
-                    alt={`${playlist.name} Channel Image`}
+                    alt={`${playlist.name} Channel`}
                     src={playlist.thumbnail}
                     className="max-h-40 w-full object-cover group-hover:brightness-50"
                   />
@@ -157,3 +142,4 @@ export default function Index() {
     </>
   );
 }
+

@@ -1,9 +1,8 @@
 import { Video } from "@prisma/client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import useWindowSize from "~/utils/useWindowSize";
 import CountUp from "./CountUp";
-import youtubeIcon from "../../public/youtube.png";
 
 type ChoiceSlideProps = {
   video: Video;
@@ -16,12 +15,13 @@ type ChoiceSlideProps = {
 export const ChoiceSlide = ({
   video,
   sliding,
-  onClick = (s: string) => {},
+  onClick = () => {},
   onAnimationComplete = () => {},
   openModal,
 }: ChoiceSlideProps) => {
   const windowSize = useWindowSize();
   const [showButtons, setShowButtons] = useState(true);
+  const nodeRef = useRef(null);
 
   const handleClick = (choice: string) => {
     onClick(choice);
@@ -34,6 +34,7 @@ export const ChoiceSlide = ({
   };
   return (
     <CSSTransition
+      nodeRef={nodeRef}
       in={sliding}
       timeout={500}
       classNames={windowSize.width > 768 ? "slide-left" : "slide-up"}
@@ -95,7 +96,7 @@ export const ChoiceSlide = ({
         <button onClick={openModal} title="Watch Video">
           <img
             className="hover:brightness-75"
-            src={youtubeIcon}
+            src="/youtube.png"
             alt="youtube icon"
           />
         </button>
@@ -115,8 +116,11 @@ export const StaticSlide = ({
   openModal,
 }: staticSlideProps) => {
   const windowSize = useWindowSize();
+  const nodeRef = useRef(null);
+
   return (
     <CSSTransition
+      nodeRef={nodeRef}
       in={sliding}
       timeout={500}
       classNames={windowSize.width > 768 ? "slide-left" : "slide-up"}
@@ -144,7 +148,7 @@ export const StaticSlide = ({
         <button onClick={openModal} title="Watch Video">
           <img
             className="hover:brightness-75"
-            src={youtubeIcon}
+            src="/youtube.png"
             alt="youtube icon"
           />
         </button>
@@ -159,8 +163,10 @@ type HiddenSlide = {
 };
 export const HiddenSlide = ({ video, sliding }: HiddenSlide) => {
   const windowSize = useWindowSize();
+  const nodeRef = useRef(null);
   return (
     <CSSTransition
+      nodeRef={nodeRef}
       in={sliding}
       timeout={500}
       classNames={windowSize.width > 768 ? "slide-left" : "slide-up"}
@@ -188,7 +194,7 @@ export const HiddenSlide = ({ video, sliding }: HiddenSlide) => {
             <span>Views</span>
           </div>
         </div>
-        <img src={youtubeIcon} alt="youtube icon" />
+        <img src="/youtube.png" alt="youtube icon" />
       </div>
     </CSSTransition>
   );

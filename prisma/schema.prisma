@@ -1,11 +1,10 @@
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity", "fullTextSearch", "fullTextIndex"]
 }
+
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // TODO: Make this a Many-to-Many relationship when Prisma actually gets that to work
@@ -31,8 +30,6 @@ model Playlist {
   type PLAYLIST_TYPE
   videos Video[]
   plays Int @default(0) // Number of times this playlist has been played
-
-  @@fulltext([name])
 }
 
 enum PLAYLIST_TYPE {

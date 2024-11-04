@@ -4,17 +4,21 @@ import { google } from "googleapis";
 let db: PrismaClient;
 
 declare global {
-  var __db: PrismaClient | undefined;
+  // eslint-disable-next-line no-var
+  var  __db: PrismaClient | undefined;
 }
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV == 'production') {
   db = new PrismaClient();
+  db.$connect();
 } else {
   if (!global.__db) {
-    global.__db = new PrismaClient();
+      global.__db = new PrismaClient();
+      global.__db.$connect();
   }
   db = global.__db;
 }
+
 
 const service = google.youtube({
   version: "v3",

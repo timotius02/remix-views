@@ -9,11 +9,11 @@ import {
   Form,
   useActionData,
   useLoaderData,
-  useTransition,
+  useNavigation
 } from "@remix-run/react";
 import { useState } from "react";
 import { createPlaylist } from "~/utils/db.server";
-import ReCAPTCHA from "react-google-recaptcha";
+import { ReCAPTCHA } from "react-google-recaptcha";
 
 export const headers: HeadersFunction = () => {
   return {
@@ -70,25 +70,25 @@ export const loader: LoaderFunction = async () => {
 };
 
 export default function NewPlaylist() {
-  const data = useLoaderData();
+  const data = useLoaderData<typeof loader>();
   const [input, setInput] = useState("");
-  const error = useActionData();
+  const error = useActionData<typeof action>();
   const [token, setToken] = useState("");
-  const transition = useTransition();
+  const navigation = useNavigation();
 
   return (
     <div className="flex-1 flex items-center justify-center">
       <div className="bg-white w-11/12 max-w-2xl p-6 md:p-10 rounded-lg">
-        <h1 className="text-3xl sm:text-4xl text-center font-extrabold mb-2">
+        <h1 className="text-3xl sm:text-4xl text-center font-extrabold mb-2 text-black">
           Custom Playlist
         </h1>
-        <p className="text-lg sm:text-xl text-center mb-12">
+        <p className="text-lg sm:text-xl text-center mb-12 text-black">
           Create a custom game from any public Youtube Playlist
         </p>
         <Form className="flex flex-col gap-4 text-lg" method="post">
-          <label htmlFor="playlistUrl">Playlist URL</label>
+          <label htmlFor="playlistUrl" className="text-black">Playlist URL</label>
           <input
-            className="flex-1 border-b-2 border-gray-400 p-2"
+            className="flex-1 border-b-2 border-gray-400 p-2 bg-white text-black"
             type="text"
             id="playlistUrl"
             name="playlistUrl"
@@ -107,9 +107,9 @@ export default function NewPlaylist() {
           <input type="hidden" name="token" value={token} />
           <button
             className="py-4 rounded bg-red-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={input === "" || transition.state !== "idle"}
+            disabled={input === "" || navigation.state !== "idle"}
           >
-            {transition.state === "idle" ? "Submit" : transition.state}
+            {navigation.state === "idle" ? "Submit" : navigation.state}
           </button>
         </Form>
       </div>

@@ -8,7 +8,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export default function Index() {
-  const data = useLoaderData();
+  const data = useLoaderData<typeof loader>();
   const gameUrl = `${data.host}/playlist/${data.id}`;
   const [copied, setCopied] = useState("Copy");
 

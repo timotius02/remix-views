@@ -1,10 +1,8 @@
-import { Playlist, PLAYLIST_TYPE } from "@prisma/client";
-import img from "../../../public/search.png";
+import { Prisma, Playlist, PLAYLIST_TYPE } from "@prisma/client";
 import { json, LoaderFunction } from "@remix-run/node";
 import { Form, Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { useState } from "react";
-import { Prisma } from "@prisma/client";
 import Pagination from "~/components/Pagination";
 import DropDown, { PlaylistType } from "~/components/Dropdown";
 
@@ -40,7 +38,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     };
   }
 
-  let query: Prisma.PlaylistFindManyArgs = {
+  const query: Prisma.PlaylistFindManyArgs = {
     skip: (page - 1) * SEARCH_PAGE_SIZE,
     take: SEARCH_PAGE_SIZE + 1,
     where,
@@ -79,7 +77,7 @@ export default function NewPlaylist() {
       <Form method="get">
         <div className="bg-white p-6 rounded max-w-3xl mx-auto w-3/4 my-8 flex items-center gap-4">
           <input
-            className="flex-1 outline-0"
+            className="flex-1 outline-0 bg-white"
             type="text"
             placeholder="Search"
             value={value}
@@ -92,7 +90,7 @@ export default function NewPlaylist() {
             onChange={(type) => setSelectedType(type)}
           />
           <button className="w-6 h-6">
-            <img src={img} alt="search icon" />
+            <img src="/search.png" alt="search icon" />
           </button>
         </div>
       </Form>
@@ -104,7 +102,7 @@ export default function NewPlaylist() {
               <Link to={`/playlist/${playlist.id}`} prefetch="intent">
                 <div className="overflow-hidden shadow-lg rounded-lg hover:scale-105 relative group">
                   <img
-                    alt={`${playlist.name} Channel Image`}
+                    alt={`${playlist.name} Channel`}
                     src={playlist.thumbnail}
                     className="max-h-40 w-full object-cover group-hover:brightness-50"
                   />

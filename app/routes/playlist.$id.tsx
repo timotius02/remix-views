@@ -1,7 +1,6 @@
-import { Video } from "@prisma/client";
-import { json, LoaderFunction } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
-import { useRef, useState } from "react";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { useFetcher } from "@remix-run/react";
+import { useState } from "react";
 import Modal from "react-modal";
 import Versus, { VERSUS_TYPES } from "~/components/Versus";
 import {
@@ -13,27 +12,27 @@ import { db } from "~/utils/db.server";
 import getRandomNumber from "~/utils/getRandomNumber";
 import useLocalStorage from "~/utils/useLocalStorage";
 import EndScreen from "~/components/EndScreen";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
-type PlaylistLoaderData = {
-  playlist: Video[];
-  index: number;
-  index2: number;
-  index3: number;
-  id: string;
-};
+export const loader = async ({params}: LoaderFunctionArgs) => {
+  if (!params.id) {
+    throw new Error("Missing Playlist ID");
+  }
 
-export const loader: LoaderFunction = async ({ params }) => {
   const playlist = await db.video.findMany({
     where: {
       playlistId: params.id,
     },
   });
 
+  if (playlist.length < 3) {
+    throw new Error("Playlist does not have enough videos");
+  }
   const index = getRandomNumber(playlist.length);
-  let index2 = getRandomNumber(playlist.length, [index]);
-  let index3 = getRandomNumber(playlist.length, [index, index2]);
+  const index2 = getRandomNumber(playlist.length, [index]);
+  const index3 = getRandomNumber(playlist.length, [index, index2]);
 
-  const data: PlaylistLoaderData = {
+  const data = {
     playlist,
     index,
     index2,
@@ -41,11 +40,11 @@ export const loader: LoaderFunction = async ({ params }) => {
     id: params.id || "",
   };
 
-  return json(data);
+  return typedjson(data);
 };
 
 export default function Index() {
-  const data = useLoaderData<PlaylistLoaderData>();
+  const data = useTypedLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const [highScore, setHighscore] = useLocalStorage(`highscore-${data.id}`, 0);
   const [score, setScore] = useState(0);

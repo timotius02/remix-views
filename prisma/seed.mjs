@@ -1,11 +1,10 @@
-const { PrismaClient, PLAYLIST_TYPE } = require("@prisma/client");
-const { google } = require("googleapis");
-const { nanoid } = require("nanoid");
-const { channels } = require("./channels");
+import { PrismaClient, PLAYLIST_TYPE } from "@prisma/client";
+import { google } from "googleapis";
+import { nanoid } from "nanoid";
+import { channels } from "./channels.mjs";
+import 'dotenv/config';
 
 const prisma = new PrismaClient();
-
-require("dotenv").config();
 
 const service = google.youtube({
   version: "v3",
@@ -13,12 +12,12 @@ const service = google.youtube({
 });
 
 async function getChannel(name) {
+  console.log(`Getting videos from ${name}`);
   const searchResult = await service.search.list({
     part: ["snippet"],
     q: name,
     maxResults: 1,
     type: "channel",
-    order: "viewCount",
   });
 
   const channelId = searchResult.data.items[0].snippet.channelId;
@@ -41,7 +40,7 @@ async function getChannel(name) {
   });
 
   let playlistThumbnails = searchResult.data.items[0].snippet.thumbnails;
-  const playlist = await prisma.playlist.create({
+  await prisma.playlist.create({
     data: {
       id: nanoid(),
       name: channelTitle,

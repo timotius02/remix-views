@@ -37,9 +37,9 @@ export default function DropDown({ value = "All", onChange }: DropDownProps) {
             aria-hidden="true"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             />
           </svg>
         </button>
@@ -57,6 +57,7 @@ export default function DropDown({ value = "All", onChange }: DropDownProps) {
         <ul className="py-1" role="none">
           {playlistTypes.map((type, index) => (
             <li
+              key={`menu-item-${index}`}
               className={`text-gray-700 block px-4 py-2 text-sm hover:cursor-pointer ${
                 value === type
                   ? "bg-gray-100 text-gray-900 font-bold"
@@ -65,9 +66,8 @@ export default function DropDown({ value = "All", onChange }: DropDownProps) {
               role="menuitem"
               tabIndex={-1}
               id={`menu-item-${index}`}
-              onClick={() => setType(type)}
             >
-              {type}
+              <button onClick={() => setType(type)}>{type}</button>
             </li>
           ))}
         </ul>

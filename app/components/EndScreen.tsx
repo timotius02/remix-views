@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import ConfettiGenerator from "confetti-js";
-import sadge from "../../public/sadge.svg";
+// import sadge from "../../public/sadge.svg";
 
 type EndScreenProps = {
   score: number;

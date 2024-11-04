@@ -1,7 +1,6 @@
+import { useRef } from "react";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 
-import checkmark from "../../public/checkmark.png";
-import x from "../../public/x.png";
 
 export type VERSUS_TYPES = "default" | "correct" | "incorrect";
 
@@ -9,16 +8,17 @@ type Versusprops = {
   state: VERSUS_TYPES;
 };
 const Versus = ({ state }: Versusprops) => {
+  const nodeRef = useRef(null);
   let style;
   let icon;
   switch (state) {
     case "correct":
       style = "bg-green-500 p-6";
-      icon = <img src={checkmark} alt="check" />;
+      icon = <img src="/checkmark.png" alt="check" />;
       break;
     case "incorrect":
       style = "bg-red-500 p-6";
-      icon = <img src={x} alt="x" />;
+      icon = <img src="/x.png" alt="x" />;
       break;
     default:
       style = "bg-white p-6";
@@ -27,7 +27,7 @@ const Versus = ({ state }: Versusprops) => {
 
   return (
     <SwitchTransition>
-      <CSSTransition key={state} timeout={200} classNames="versus" appear>
+      <CSSTransition nodeRef={nodeRef} key={state} timeout={200} classNames="versus" appear>
         <div
           className={`absolute rounded-full origin-top-left top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${style}`}
         >

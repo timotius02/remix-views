@@ -12,7 +12,7 @@ const CountUp = ({ target }: CountUpProps) => {
         setCount((count) => count + 1);
       }, 10);
     }
-  }, [count]);
+  }, [count, target]);
 
   return (
     <h1 className="text-3xl md:text-6xl font-bold text-center">
