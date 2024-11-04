@@ -1,5 +1,5 @@
 import { PLAYLIST_TYPE } from "@prisma/client";
-import { HeadersFunction } from "@remix-run/node";
+import type { HeadersFunction } from "@vercel/remix";
 import { Form, json, Link, useLoaderData, } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import useWindowSize from "~/utils/useWindowSize";
