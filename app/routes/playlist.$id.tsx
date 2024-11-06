@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Versus, { VERSUS_TYPES } from "~/components/Versus";
 import {
@@ -10,7 +10,6 @@ import {
 } from "~/components/VideoSlides";
 import { db } from "~/utils/db.server";
 import getRandomNumber from "~/utils/getRandomNumber";
-import useLocalStorage from "~/utils/useLocalStorage";
 import EndScreen from "~/components/EndScreen";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
@@ -46,7 +45,7 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 export default function Index() {
   const data = useTypedLoaderData<typeof loader>();
   const fetcher = useFetcher();
-  const [highScore, setHighscore] = useLocalStorage(`highscore-${data.id}`, 0);
+  const [highScore, setHighscore] = useState(0);
   const [score, setScore] = useState(0);
   const [index, setIndex] = useState(data.index);
   const [index2, setIndex2] = useState(data.index2);
@@ -63,6 +62,11 @@ export default function Index() {
   const video3 = data.playlist[index3];
 
   Modal.setAppElement("body");
+
+  useEffect(() => {
+    const storedScore = window.localStorage.getItem(`highscore-${data.id}`);
+    setHighscore(storedScore ? parseInt(storedScore) : 0);
+  }, [setHighscore, data.id])
 
   const correctAnswer = () => {
     setScore(score + 1);

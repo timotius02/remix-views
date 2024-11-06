@@ -29,6 +29,7 @@ const Versus = ({ state }: Versusprops) => {
     <SwitchTransition>
       <CSSTransition nodeRef={nodeRef} key={state} timeout={200} classNames="versus" appear>
         <div
+          ref={nodeRef}
           className={`absolute rounded-full origin-top-left top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${style}`}
         >
           <h1 className="font-extrabold text-2xl md:text-3xl text-black">

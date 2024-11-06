@@ -22,6 +22,8 @@ export const ChoiceSlide = ({
   const windowSize = useWindowSize();
   const [showButtons, setShowButtons] = useState(true);
   const nodeRef = useRef(null);
+  const nodeRef2 = useRef(null);
+  const nodeRef3 = useRef(null);
 
   const handleClick = (choice: string) => {
     onClick(choice);
@@ -41,6 +43,7 @@ export const ChoiceSlide = ({
       onEntered={handleAnimationComplete}
     >
       <div
+        ref={nodeRef}
         className="flex flex-col w-full h-1/2 md:w-1/2 md:h-full bg-cover bg-center items-center justify-center shrink-0 relative"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${video.thumbnail})`,
@@ -54,12 +57,13 @@ export const ChoiceSlide = ({
           <TransitionGroup component={null}>
             {showButtons ? (
               <CSSTransition
+                nodeRef={nodeRef2}
                 timeout={500}
                 classNames="buttons"
                 key={video.id + "buttons"}
                 unmountOnExit
               >
-                <div className="flex flex-col items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div ref={nodeRef2} className="flex flex-col items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <div className="flex md:flex-col gap-3 my-3 z-10">
                     <button
                       className="border-2 border-white px-10 py-2 font-bold text-yellow-400 text-lg rounded-full hover:bg-white hover:text-black"
@@ -79,11 +83,12 @@ export const ChoiceSlide = ({
               </CSSTransition>
             ) : (
               <CSSTransition
+                nodeRef={nodeRef3}
                 timeout={500}
                 classNames="views-counter"
                 key={video.id + "views"}
               >
-                <div className="flex flex-col items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div ref={nodeRef3} className="flex flex-col items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <CountUp target={+video.viewCount} />
                   <h3 className="text-xl md:text-3xl font-medium text-center">
                     Views
@@ -126,6 +131,7 @@ export const StaticSlide = ({
       classNames={windowSize.width > 768 ? "slide-left" : "slide-up"}
     >
       <div
+        ref={nodeRef}
         className="flex flex-col w-full h-1/2 md:w-1/2 md:h-full bg-cover bg-center items-center justify-center shrink-0 relative"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${video.thumbnail})`,
@@ -157,11 +163,11 @@ export const StaticSlide = ({
   );
 };
 
-type HiddenSlide = {
+type HiddenSlideProps = {
   video: Video;
   sliding: boolean;
 };
-export const HiddenSlide = ({ video, sliding }: HiddenSlide) => {
+export const HiddenSlide = ({ video, sliding }: HiddenSlideProps) => {
   const windowSize = useWindowSize();
   const nodeRef = useRef(null);
   return (
@@ -172,6 +178,7 @@ export const HiddenSlide = ({ video, sliding }: HiddenSlide) => {
       classNames={windowSize.width > 768 ? "slide-left" : "slide-up"}
     >
       <div
+        ref={nodeRef}
         className="flex flex-col w-full h-1/2 md:w-1/2 md:h-full bg-cover bg-center items-center justify-center shrink-0 relative"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${video.thumbnail})`,
